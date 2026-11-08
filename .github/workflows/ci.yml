@@ -42,3 +42,8 @@ jobs:
           (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab box-audit --artifacts /tmp/box-wheel) >/tmp/wheel-box-run.json
           for f in digitlab/artifacts/box*.json; do cmp "$f" "/tmp/box-wheel/$(basename "$f")"; done
           (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab.box; print('8 modules and 6 CLI modes verified')")
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab radius) >/tmp/wheel-radius.json
+          cmp /tmp/wheel-radius.json digitlab/artifacts/radius-report.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab radius-audit --artifacts /tmp/radius-wheel) >/tmp/wheel-radius-run.json
+          cmp /tmp/wheel-radius-run.json digitlab/artifacts/radius-report.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab.radius; print('9 modules and 8 CLI modes verified')")
