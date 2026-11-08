@@ -19,7 +19,7 @@ Changing the reference changes the question; neither baseline is assumed
 neutral or realistic. These are not causal feature importance, class
 probabilities, deletion effects or proof the model is trustworthy.
 
-![Finite attribution checks and baseline-relative signed digit maps](assets/attribution-audit.svg)
+![Finite attribution checks and baseline-relative signed digit maps](https://github.com/midya8/digitlab/raw/24112893ca7560c364e79c328464dd5c5b68e7c6/assets/attribution-audit.svg)
 
 The established method is evaluated algebraically for the existing linear and
 one-hidden-layer tanh models, with a stable divided difference for small hidden
