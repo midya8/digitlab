@@ -23,7 +23,7 @@ confidence, production OCR or an accuracy promise on your drawing. The stronger
 The exact rational proofs remain separate. Original examples are first per
 class, explicitly not a representative sample.
 
-62 Python tests and four Node/browser tests include 52 independent NumPy
+64 Python tests and four Node/browser tests include 52 independent NumPy
 inference/loss/input-gradient/FGSM reference cases, byte-exact model/sample
 exports, actual keyboard/touch/edit/reset/label/bounds flows, and no horizontal page
 overflow at 320px, 390px and 1280px. The previous 59 Python tests are preserved.
