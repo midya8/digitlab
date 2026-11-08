@@ -8,6 +8,31 @@ is retained even when it wins.
 
 ![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
+## v0.2: an exact question for the fixed linear model
+
+The new [box audit](BOX.md) solves every true-label competitor margin on the
+clipped continuous box with exact integers/rationals. At radii 0, 1/20, 1/10
+and 1/5, the linear model is correct everywhere for **1,698 / 1,495 / 1,028 / 23**
+of the 1,797 test examples. The saved PGD pool retained 1,042 and 33 at the
+latter two radii, leaving 14 and 10 surviving examples with attained failures.
+No weights, selection rules, original report or attack settings changed.
+
+![Exact affine-box correctness and actual missed-PGD witnesses](assets/box-audit.svg)
+
+Scope matters: this proves correctness for the **real affine function of the
+loaded binary64 coefficients**, not all floating-point executions. All clean
+and 7,188 witness predictions agree with NumPy, which is a finite check, not a
+floating roundoff proof. The nonlinear MLP remains uncertified. Lowest-index
+ties and [0,1] clipping are part of the proof, not optional approximations.
+45 tests preserve the original 30, adding 144 all-vertex certificate checks,
+160 independent Fraction row references, exact report/CLI reproduction and a
+second full-report figure. Six CLI modes and eight installed modules:
+
+```bash
+python -m digitlab box
+OPENBLAS_NUM_THREADS=1 python -m digitlab box-audit --artifacts runs/box
+```
+
 ## Real data, with the official boundary preserved
 
 This is UCI Optical Recognition of Handwritten Digits, **not MNIST**. Each input
@@ -109,7 +134,7 @@ bounded parameters. These are inference checks, not a prompt-security product.
 
 ## Verification and limits
 
-30 tests include **201 independent finite-difference parameter/input probes**
+The original 30 tests include **201 independent finite-difference parameter/input probes**
 across linear and tanh models, explicit L2-gradient checks, stable extreme logits,
 SGD descent, no input/RNG mutation, safe JSON round trips, official dataset hashes
 and class counts, frozen split/selection rules, independent 1NN distances and tie
