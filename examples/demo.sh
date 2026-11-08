@@ -36,3 +36,16 @@ python -m digitlab radius-audit --artifacts "$TMP/radius" > "$TMP/radius-run.jso
 cmp "$TMP/radius-run.json" digitlab/artifacts/radius-report.json
 python examples/render_radius.py "$TMP/radius-figure.svg"
 cmp "$TMP/radius-figure.svg" assets/radius-audit.svg
+
+python -m digitlab attribution > "$TMP/attribution-saved.json"
+cmp "$TMP/attribution-saved.json" digitlab/artifacts/attribution-report.json
+python -m digitlab attribution-audit --artifacts "$TMP/attribution" > "$TMP/attribution-run.json"
+python - "$TMP/attribution-run.json" <<'PY'
+import json,sys,unittest
+sys.path.insert(0,'tests')
+from test_attribution_report import numeric_equal
+numeric_equal(unittest.TestCase(),json.load(open('digitlab/artifacts/attribution-report.json')),json.load(open(sys.argv[1])))
+print('Full attribution report, exact discrete provenance and finite numerical references: OK')
+PY
+python examples/render_attribution.py "$TMP/attribution-figure.svg"
+cmp "$TMP/attribution-figure.svg" assets/attribution-audit.svg

@@ -52,6 +52,20 @@ jobs:
           (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab radius-audit --artifacts /tmp/radius-wheel) >/tmp/wheel-radius-run.json
           cmp /tmp/wheel-radius-run.json digitlab/artifacts/radius-report.json
           (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab.radius; print('9 modules and 8 CLI modes verified')")
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab attribution) >/tmp/wheel-attribution.json
+          cmp /tmp/wheel-attribution.json digitlab/artifacts/attribution-report.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab attribution-audit --artifacts /tmp/attribution-wheel) >/tmp/wheel-attribution-run.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python - "$GITHUB_WORKSPACE" <<'PY'
+          import json,sys,unittest
+          from pathlib import Path
+          from digitlab import attribution
+          assert Path(attribution.__file__).is_relative_to('/tmp/installed')
+          sys.path.insert(0,str(Path(sys.argv[1])/'tests'))
+          from test_attribution_report import numeric_equal
+          numeric_equal(unittest.TestCase(),json.load(open(Path(sys.argv[1])/'digitlab/artifacts/attribution-report.json')),json.load(open('/tmp/wheel-attribution-run.json')))
+          print('10 modules and 10 CLI modes with installed attribution reproduction verified')
+          PY
+          )
   web:
     runs-on: ubuntu-24.04
     steps:

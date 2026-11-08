@@ -1,13 +1,17 @@
 import argparse,json,sys
 from pathlib import Path
 import numpy as np
-from . import train,evaluate,model,box,radius
+from . import train,evaluate,model,box,radius,attribution
 ART=Path(__file__).resolve().parent/'artifacts'
 
 def main(argv=None):
-    p=argparse.ArgumentParser(description='Real UCI digit training and bounded-input attack audit');p.add_argument('mode',choices=('demo','train','evaluate','predict','box','box-audit','radius','radius-audit'));p.add_argument('--artifacts');p.add_argument('--model');p.add_argument('--input');a=p.parse_args(argv)
+    p=argparse.ArgumentParser(description='Real UCI digit training and bounded-input attack audit');p.add_argument('mode',choices=('demo','train','evaluate','predict','box','box-audit','radius','radius-audit','attribution','attribution-audit'));p.add_argument('--artifacts');p.add_argument('--model');p.add_argument('--input');a=p.parse_args(argv)
     try:
-        if a.mode=='radius':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('radius-report.json').read_text())
+        if a.mode=='attribution':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('attribution-report.json').read_text())
+        elif a.mode=='attribution-audit':
+            if not a.artifacts:raise ValueError('attribution-audit requires --artifacts output directory')
+            r=attribution.run(a.artifacts)
+        elif a.mode=='radius':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('radius-report.json').read_text())
         elif a.mode=='radius-audit':
             if not a.artifacts:raise ValueError('radius-audit requires --artifacts output directory')
             r=radius.run(a.artifacts)
