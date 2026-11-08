@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: bash examples/demo.sh
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip wheel . --no-deps -w /tmp/wheels
+      - run: python -m pip install --target /tmp/installed /tmp/wheels/*.whl
+      - run: |
+          python -m digitlab demo >/tmp/source-demo.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab demo) >/tmp/wheel-demo.json
+          cmp /tmp/source-demo.json /tmp/wheel-demo.json
+          python -m digitlab predict --model digitlab/artifacts/mlp.json --input examples/input.json >/tmp/source-prediction.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab predict --model /tmp/installed/digitlab/artifacts/mlp.json --input "$GITHUB_WORKSPACE/examples/input.json") >/tmp/wheel-prediction.json
+          cmp /tmp/source-prediction.json /tmp/wheel-prediction.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab, digitlab.__main__, digitlab.data, digitlab.model, digitlab.train, digitlab.attack, digitlab.evaluate; from digitlab.data import load; assert load('train')[0].shape==(3823,64); assert load('test')[0].shape==(1797,64); print('7 modules and bundled hashes verified')")
