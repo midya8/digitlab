@@ -17,7 +17,7 @@ of the 1,797 test examples. The saved PGD pool retained 1,042 and 33 at the
 latter two radii, leaving 14 and 10 surviving examples with attained failures.
 No weights, selection rules, original report or attack settings changed.
 
-![Exact affine-box correctness and actual missed-PGD witnesses](assets/box-audit.svg)
+![Exact affine-box correctness and actual missed-PGD witnesses](https://raw.githubusercontent.com/midya8/digitlab/562e23c333c85051959b32f6e5ba8cd3926679f0/assets/box-audit.svg)
 
 Scope matters: this proves correctness for the **real affine function of the
 loaded binary64 coefficients**, not all floating-point executions. All clean
