@@ -25,5 +25,5 @@ test('actual browser: labels, edit/reset, two models, FGSM, keyboard, mobile lay
   await js(`document.querySelector('#sample').value='6';document.querySelector('#sample').dispatchEvent(new Event('change'));document.querySelector('#model').value='mlp';document.querySelector('#model').dispatchEvent(new Event('change'));document.querySelector('#attack').click()`);
   assert.equal(await js(`document.querySelector('#label').value`),'6');assert.match(await js(`document.querySelector('#provenance').textContent`),/recorded label 6/);assert.equal(await js(`document.querySelectorAll('#attack-grid span').length`),64);
   if(process.env.DIGITLAB_SCREENSHOT){await call('Emulation.setDeviceMetricsOverride',{width:1280,height:1800,deviceScaleFactor:1,mobile:false});const s=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:true});fs.writeFileSync(process.env.DIGITLAB_SCREENSHOT,Buffer.from(s.data,'base64'));}
- }finally{if(ws)ws.close();browser.kill('SIGTERM');await new Promise(resolve=>browser.once('exit',resolve));fs.rmSync(profile,{recursive:true,force:true,maxRetries:3,retryDelay:100});}
+ }finally{if(ws)ws.close();browser.kill('SIGTERM');if(browser.exitCode===null)await new Promise(resolve=>browser.once('exit',resolve));await fs.promises.rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
 });
