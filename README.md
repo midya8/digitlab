@@ -10,7 +10,8 @@ is retained even when it wins.
 
 ## v0.4: inspect the models in a browser
 
-The new offline [interactive demo](docs/index.html) uses the unchanged selected
+The [live model inspector](https://midya8.github.io/digitlab/) also works
+[offline](docs/index.html). It uses the unchanged selected
 linear/MLP weights and original, attributed examples. Edit an 8x8 block-count
 grid, inspect all ten softmax scores, and try clipped FGSM with an explicit loss
 label. Editing clears a recorded label; ordinary prediction never depends on
