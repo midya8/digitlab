@@ -37,3 +37,8 @@ jobs:
           (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab predict --model /tmp/installed/digitlab/artifacts/mlp.json --input "$GITHUB_WORKSPACE/examples/input.json") >/tmp/wheel-prediction.json
           cmp /tmp/source-prediction.json /tmp/wheel-prediction.json
           (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab, digitlab.__main__, digitlab.data, digitlab.model, digitlab.train, digitlab.attack, digitlab.evaluate; from digitlab.data import load; assert load('train')[0].shape==(3823,64); assert load('test')[0].shape==(1797,64); print('7 modules and bundled hashes verified')")
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab box) >/tmp/wheel-box.json
+          cmp /tmp/wheel-box.json digitlab/artifacts/box-report.json
+          (cd /tmp && PYTHONPATH=/tmp/installed python -m digitlab box-audit --artifacts /tmp/box-wheel) >/tmp/wheel-box-run.json
+          for f in digitlab/artifacts/box*.json; do cmp "$f" "/tmp/box-wheel/$(basename "$f")"; done
+          (cd /tmp && PYTHONPATH=/tmp/installed python -c "import digitlab.box; print('8 modules and 6 CLI modes verified')")
