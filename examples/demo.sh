@@ -22,3 +22,10 @@ print('Real-data clean baselines, bounded attacks, nonzero attack success and fr
 PY
 python examples/render_audit.py "$TMP/figure.svg"
 cmp "$TMP/figure.svg" assets/digit-audit.svg
+
+python -m digitlab box > "$TMP/box-summary.json"
+cmp "$TMP/box-summary.json" digitlab/artifacts/box-report.json
+python -m digitlab box-audit --artifacts "$TMP/box" > "$TMP/box-run.json"
+for f in digitlab/artifacts/box*.json; do cmp "$f" "$TMP/box/$(basename "$f")"; done
+python examples/render_box.py "$TMP/box-figure.svg"
+cmp "$TMP/box-figure.svg" assets/box-audit.svg
