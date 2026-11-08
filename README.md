@@ -25,7 +25,7 @@ class, explicitly not a representative sample.
 
 62 Python tests and four Node/browser tests include 52 independent NumPy
 inference/loss/input-gradient/FGSM reference cases, byte-exact model/sample
-exports, actual keyboard/edit/reset/label/bounds flows, and no horizontal page
+exports, actual keyboard/touch/edit/reset/label/bounds flows, and no horizontal page
 overflow at 320px, 390px and 1280px. The previous 59 Python tests are preserved.
 Open `docs/index.html` locally after cloning, with no runtime install required.
 Developer checks:
@@ -37,7 +37,7 @@ node --test tests/test_web.cjs tests/test_browser.cjs
 
 The actual-browser test needs Node 22 and Chrome; numerical JavaScript tests
 need only Node. Six CI jobs check Python 3.10-3.13, the installed wheel and the
-browser demo. [Demo provenance and data terms](docs/NOTICE.md).
+browser demo. [Browser protocol and privacy](WEB.md). [Data terms](docs/NOTICE.md).
 
 ## v0.3: the infimum can be unattained
 
