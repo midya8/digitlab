@@ -1,6 +1,6 @@
 # Browser demo provenance
 
-No user input is sent to a server. All inference and FGSM computations are local
+No user input is sent to a server. All inference, FGSM and Integrated Gradients computations are local
 JavaScript. No analytics, font CDN, model API, service worker or external runtime
 is used. Loading the page/assets still contacts its static host normally.
 
@@ -17,3 +17,9 @@ Original code is MIT. FGSM and manual softmax/tanh backpropagation are establish
 methods, not inventions. Exact rational proofs in the repository are NOT run by
 this floating JavaScript demo. Sources and limitations remain in METHOD.md,
 BOX.md and RADIUS.md at https://github.com/midya8/digitlab .
+
+Class-logit Integrated Gradients follows Sundararajan, Taly & Yan (ICML 2017):
+https://proceedings.mlr.press/v70/sundararajan17a.html . The algebraic specialization
+is original implementation work, not a claim of inventing the established
+method. Baseline-relative contributions are not causal importance, class
+probabilities or deletion effects. Full sources and controls: ATTRIBUTION.md.
