@@ -6,7 +6,7 @@ weights. A linear softmax model and a 32-hidden-unit tanh MLP are trained from
 scratch with manual parameter and input gradients. A strong exact 1NN baseline
 is retained even when it wins.
 
-![Real data, stronger baseline, bounded attacks and actual digit adaptations](assets/digit-audit.svg)
+![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
 ## Real data, with the official boundary preserved
 
