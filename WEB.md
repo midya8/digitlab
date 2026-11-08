@@ -72,3 +72,23 @@ boundary tie or the nonlinear MLP.
 
 Data/adapted visualizations retain the attribution and CC BY 4.0 terms in
 [docs/NOTICE.md](docs/NOTICE.md). Original code is MIT. No endorsement is implied.
+
+## Signed class-logit contributions
+
+The new fourth section evaluates established Integrated Gradients for a class
+selected independently of the attack loss label. Zero counts and the frozen
+fitting-only mean are explicit references. The input logit, baseline logit,
+change, sum and floating residual remain visible. The 64 signed values are
+available as text as well as a heatmap. Blue means positive contribution to
+this logit change; orange means negative. The scale is stated and changes per
+map, so colors alone are not a quantitative baseline comparison. Changing the
+input/model/reference/target invalidates the result; changing an attack label
+does not silently change an attribution target.
+
+The browser's algebraic tanh path integral has 106 separate NumPy vector
+references, with absolute tolerance 5e-12. Independent numerical integration
+and finite-difference controls are in ATTRIBUTION.md and the Python suite.
+Neither a small residual nor an attractive heatmap proves explanation quality,
+causality, correctness or trustworthy behavior. Baselines can be nonneutral and
+intermediate path inputs can be unrealistic. Original model weights do not
+change. These computations also stay local to the page.
