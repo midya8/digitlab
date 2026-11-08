@@ -41,7 +41,9 @@ requirements are tested separately. The original 59 Python tests remain intact.
 A real headless Chrome test checks model selection, clear/restore, label clearing,
 FGSM bounds, keyboard movement/painting, actual dispatched touch dragging, and
 horizontal layout at 320, 390 and 1280 pixels. Node 22 and Chrome are required
-only for developer browser tests, not visitors. Temporary profiles are deleted
+only for developer browser tests, not visitors. CI explicitly installs stable Chrome for Testing on Ubuntu 24.04 and uses the
+returned binary path; startup errors retain bounded diagnostic output. Temporary
+profiles are deleted
 with awaited retries after Chrome exits.
 
 ```bash
