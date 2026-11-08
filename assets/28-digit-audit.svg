@@ -1,0 +1,916 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1660" viewBox="0 0 1280 1660">
+<rect width="1280" height="1660" fill="#edf3f5"/><rect x="16" y="16" width="1248" height="1628" rx="18" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#25384b}.title{font-size:27px;font-weight:bold}.section{font-size:21px;font-weight:bold}.note{font-size:17px;fill:#59728a}.cell{font-size:18px;font-family:monospace}.head{font-size:18px;font-weight:bold}</style>
+<text x="40" y="58" class="title">DigitLab / clean accuracy is not bounded-input robustness</text>
+<text x="40" y="91" class="note">Real UCI 8-by-8 digits. Official writer-independent test split, not a random pool of test images.</text>
+<text x="40" y="137" class="section">1  Fixed training/validation choices, then a frozen-test audit</text>
+<text x="45" y="174" class="note">Official training</text>
+<text x="45" y="204" class="cell" data-key="official_training_rows">3823</text>
+<text x="350" y="174" class="note">Fit</text>
+<text x="350" y="204" class="cell" data-key="fit_rows">3062</text>
+<text x="630" y="174" class="note">Validation</text>
+<text x="630" y="204" class="cell" data-key="validation_rows">761</text>
+<text x="940" y="174" class="note">Official test</text>
+<text x="940" y="204" class="cell" data-key="official_test_rows">1797</text>
+<text x="45" y="251" class="head">Classifier</text>
+<text x="435" y="251" class="head">Correct / test rows</text>
+<text x="710" y="251" class="head">Accuracy</text>
+<text x="920" y="251" class="head">Test NLL</text>
+<text x="45" y="287" class="note">Exact 1NN, same fitting rows</text>
+<text x="435" y="287" class="cell" data-key="clean/1nn/correct">1760</text>
+<text x="530" y="287" class="note">/ 1797</text>
+<text x="710" y="287" class="cell" data-key="clean/1nn/accuracy">97.94%</text>
+<text x="920" y="287" class="note">Not a probability model</text>
+<text x="45" y="326" class="note">Linear softmax</text>
+<text x="435" y="326" class="cell" data-key="clean/linear/correct">1698</text>
+<text x="530" y="326" class="note">/ 1797</text>
+<text x="710" y="326" class="cell" data-key="clean/linear/accuracy">94.49%</text>
+<text x="920" y="326" class="cell" data-key="clean/linear/nll">0.16906</text>
+<text x="45" y="365" class="note">Tanh MLP</text>
+<text x="435" y="365" class="cell" data-key="clean/mlp/correct">1734</text>
+<text x="530" y="365" class="note">/ 1797</text>
+<text x="710" y="365" class="cell" data-key="clean/mlp/accuracy">96.49%</text>
+<text x="920" y="365" class="cell" data-key="clean/mlp/nll">0.12096</text>
+<text x="45" y="418" class="note">Parameter counts: linear</text>
+<text x="315" y="418" class="cell" data-key="selection/linear/parameter_count">650</text>
+<text x="430" y="418" class="note">MLP</text>
+<text x="510" y="418" class="cell" data-key="selection/mlp/parameter_count">2410</text>
+<text x="675" y="418" class="note">Chosen epochs:</text>
+<text x="860" y="418" class="cell" data-key="selection/linear/selected_epoch">80</text>
+<text x="980" y="418" class="cell" data-key="selection/mlp/selected_epoch">80</text>
+<text x="40" y="468" class="section">2  Every number below is correct / 1797, not a robustness certificate</text>
+<text x="40" y="501" class="note">L-infinity radius uses normalized pixels [0,1]; epsilon 0.1 means 1.6 original pixel-count units.</text>
+<text x="45" y="545" class="head">Model / epsilon</text>
+<text x="435" y="545" class="head">FGSM</text>
+<text x="710" y="545" class="head">Random sign</text>
+<text x="970" y="545" class="head">PGD candidate pool</text>
+<text x="45" y="582" class="note">linear / 0.05</text>
+<text x="435" y="582" class="cell" data-key="attack/linear/2/correct">1507</text>
+<text x="710" y="582" class="cell" data-key="attack/linear/3/correct">1697</text>
+<text x="970" y="582" class="note">not run</text>
+<text x="45" y="618" class="note">linear / 0.1</text>
+<text x="435" y="618" class="cell" data-key="attack/linear/4/correct">1089</text>
+<text x="710" y="618" class="cell" data-key="attack/linear/5/correct">1682</text>
+<text x="970" y="618" class="cell" data-key="attack/linear/8/correct">1042</text>
+<text x="45" y="654" class="note">linear / 0.2</text>
+<text x="435" y="654" class="cell" data-key="attack/linear/6/correct">119</text>
+<text x="710" y="654" class="cell" data-key="attack/linear/7/correct">1617</text>
+<text x="970" y="654" class="cell" data-key="attack/linear/9/correct">33</text>
+<text x="45" y="690" class="note">mlp / 0.05</text>
+<text x="435" y="690" class="cell" data-key="attack/mlp/2/correct">1500</text>
+<text x="710" y="690" class="cell" data-key="attack/mlp/3/correct">1728</text>
+<text x="970" y="690" class="note">not run</text>
+<text x="45" y="726" class="note">mlp / 0.1</text>
+<text x="435" y="726" class="cell" data-key="attack/mlp/4/correct">898</text>
+<text x="710" y="726" class="cell" data-key="attack/mlp/5/correct">1708</text>
+<text x="970" y="726" class="cell" data-key="attack/mlp/8/correct">768</text>
+<text x="45" y="762" class="note">mlp / 0.2</text>
+<text x="435" y="762" class="cell" data-key="attack/mlp/6/correct">71</text>
+<text x="710" y="762" class="cell" data-key="attack/mlp/7/correct">1629</text>
+<text x="970" y="762" class="cell" data-key="attack/mlp/9/correct">3</text>
+<text x="45" y="822" class="note">Zero-radius FGSM / random checks:</text>
+<text x="480" y="822" class="cell" data-key="attack/linear/0/correct">1698</text>
+<text x="650" y="822" class="cell" data-key="attack/linear/1/correct">1698</text>
+<text x="820" y="822" class="cell" data-key="attack/mlp/0/correct">1734</text>
+<text x="990" y="822" class="cell" data-key="attack/mlp/1/correct">1734</text>
+<text x="40" y="859" class="note">PGD: 20 steps, 3 random starts; pool includes clean, FGSM, starts and every iterate.</text>
+<text x="40" y="888" class="note">All pixels clipped to [0,1] and projected to the radius. One fixed random-sign draw, no tuning.</text>
+<text x="40" y="936" class="section">3  Selected examples: first three successes, then first three survivors</text>
+<text x="40" y="968" class="note">MLP PGD at epsilon 0.1. These display choices are not a representative sample. No imperceptibility claim.</text>
+<text x="50" y="1007" class="note">Test row</text>
+<text x="155" y="1007" class="cell" data-key="example/0/test_row">6</text>
+<text x="260" y="1007" class="note">true</text>
+<text x="310" y="1007" class="cell" data-key="example/0/true">6</text>
+<text x="50" y="1033" class="note">Clean</text>
+<rect x="50" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/0" data-pixel="0.0"/>
+<rect x="64" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/1" data-pixel="0.0"/>
+<rect x="78" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/2" data-pixel="0.0"/>
+<rect x="92" y="1043" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/0/clean_pixels/3" data-pixel="0.75"/>
+<rect x="106" y="1043" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/0/clean_pixels/4" data-pixel="0.8125"/>
+<rect x="120" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/5" data-pixel="0.0"/>
+<rect x="134" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/6" data-pixel="0.0"/>
+<rect x="148" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/7" data-pixel="0.0"/>
+<rect x="50" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/8" data-pixel="0.0"/>
+<rect x="64" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/9" data-pixel="0.0"/>
+<rect x="78" y="1057" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/0/clean_pixels/10" data-pixel="0.3125"/>
+<rect x="92" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/clean_pixels/11" data-pixel="1.0"/>
+<rect x="106" y="1057" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/0/clean_pixels/12" data-pixel="0.5"/>
+<rect x="120" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/13" data-pixel="0.0"/>
+<rect x="134" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/14" data-pixel="0.0"/>
+<rect x="148" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/15" data-pixel="0.0"/>
+<rect x="50" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/16" data-pixel="0.0"/>
+<rect x="64" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/17" data-pixel="0.0"/>
+<rect x="78" y="1071" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/0/clean_pixels/18" data-pixel="0.8125"/>
+<rect x="92" y="1071" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/clean_pixels/19" data-pixel="1.0"/>
+<rect x="106" y="1071" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/0/clean_pixels/20" data-pixel="0.1875"/>
+<rect x="120" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/21" data-pixel="0.0"/>
+<rect x="134" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/22" data-pixel="0.0"/>
+<rect x="148" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/23" data-pixel="0.0"/>
+<rect x="50" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/24" data-pixel="0.0"/>
+<rect x="64" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/25" data-pixel="0.0"/>
+<rect x="78" y="1085" width="14" height="14" fill="rgb(32,32,32)" data-pixel-key="example/0/clean_pixels/26" data-pixel="0.875"/>
+<rect x="92" y="1085" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/0/clean_pixels/27" data-pixel="0.8125"/>
+<rect x="106" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/28" data-pixel="0.0"/>
+<rect x="120" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/29" data-pixel="0.0"/>
+<rect x="134" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/30" data-pixel="0.0"/>
+<rect x="148" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/31" data-pixel="0.0"/>
+<rect x="50" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/32" data-pixel="0.0"/>
+<rect x="64" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/33" data-pixel="0.0"/>
+<rect x="78" y="1099" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/0/clean_pixels/34" data-pixel="0.9375"/>
+<rect x="92" y="1099" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/0/clean_pixels/35" data-pixel="0.75"/>
+<rect x="106" y="1099" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/0/clean_pixels/36" data-pixel="0.4375"/>
+<rect x="120" y="1099" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/0/clean_pixels/37" data-pixel="0.125"/>
+<rect x="134" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/38" data-pixel="0.0"/>
+<rect x="148" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/39" data-pixel="0.0"/>
+<rect x="50" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/40" data-pixel="0.0"/>
+<rect x="64" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/41" data-pixel="0.0"/>
+<rect x="78" y="1113" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/0/clean_pixels/42" data-pixel="0.8125"/>
+<rect x="92" y="1113" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/clean_pixels/43" data-pixel="1.0"/>
+<rect x="106" y="1113" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/0/clean_pixels/44" data-pixel="0.8125"/>
+<rect x="120" y="1113" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/clean_pixels/45" data-pixel="1.0"/>
+<rect x="134" y="1113" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/0/clean_pixels/46" data-pixel="0.1875"/>
+<rect x="148" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/47" data-pixel="0.0"/>
+<rect x="50" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/48" data-pixel="0.0"/>
+<rect x="64" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/49" data-pixel="0.0"/>
+<rect x="78" y="1127" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/0/clean_pixels/50" data-pixel="0.4375"/>
+<rect x="92" y="1127" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/clean_pixels/51" data-pixel="1.0"/>
+<rect x="106" y="1127" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/0/clean_pixels/52" data-pixel="0.6875"/>
+<rect x="120" y="1127" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/0/clean_pixels/53" data-pixel="0.9375"/>
+<rect x="134" y="1127" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/0/clean_pixels/54" data-pixel="0.5"/>
+<rect x="148" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/55" data-pixel="0.0"/>
+<rect x="50" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/56" data-pixel="0.0"/>
+<rect x="64" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/57" data-pixel="0.0"/>
+<rect x="78" y="1141" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/0/clean_pixels/58" data-pixel="0.0625"/>
+<rect x="92" y="1141" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/0/clean_pixels/59" data-pixel="0.5625"/>
+<rect x="106" y="1141" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/0/clean_pixels/60" data-pixel="0.9375"/>
+<rect x="120" y="1141" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/0/clean_pixels/61" data-pixel="0.6875"/>
+<rect x="134" y="1141" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/0/clean_pixels/62" data-pixel="0.1875"/>
+<rect x="148" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/clean_pixels/63" data-pixel="0.0"/>
+<text x="50" y="1180" class="note">Prediction</text>
+<text x="155" y="1180" class="cell" data-key="example/0/clean_prediction">6</text>
+<text x="195" y="1033" class="note">Attacked</text>
+<rect x="195" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/0" data-pixel="0.1"/>
+<rect x="209" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/1" data-pixel="0.0"/>
+<rect x="223" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/2" data-pixel="0.1"/>
+<rect x="237" y="1043" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/0/attacked_pixels/3" data-pixel="0.65"/>
+<rect x="251" y="1043" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/0/attacked_pixels/4" data-pixel="0.7125"/>
+<rect x="265" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/5" data-pixel="0.0"/>
+<rect x="279" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/6" data-pixel="0.0"/>
+<rect x="293" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/7" data-pixel="0.1"/>
+<rect x="195" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/8" data-pixel="0.0"/>
+<rect x="209" y="1057" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/9" data-pixel="0.1"/>
+<rect x="223" y="1057" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/0/attacked_pixels/10" data-pixel="0.2125"/>
+<rect x="237" y="1057" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/0/attacked_pixels/11" data-pixel="0.9"/>
+<rect x="251" y="1057" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/0/attacked_pixels/12" data-pixel="0.4"/>
+<rect x="265" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/13" data-pixel="0.0"/>
+<rect x="279" y="1057" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/14" data-pixel="0.1"/>
+<rect x="293" y="1057" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/15" data-pixel="0.1"/>
+<rect x="195" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/16" data-pixel="0.1"/>
+<rect x="209" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/17" data-pixel="0.0"/>
+<rect x="223" y="1071" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/0/attacked_pixels/18" data-pixel="0.9125"/>
+<rect x="237" y="1071" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/attacked_pixels/19" data-pixel="1.0"/>
+<rect x="251" y="1071" width="14" height="14" fill="rgb(182,182,182)" data-pixel-key="example/0/attacked_pixels/20" data-pixel="0.2875"/>
+<rect x="265" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/21" data-pixel="0.1"/>
+<rect x="279" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/22" data-pixel="0.0"/>
+<rect x="293" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/23" data-pixel="0.0"/>
+<rect x="195" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/24" data-pixel="0.1"/>
+<rect x="209" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/25" data-pixel="0.1"/>
+<rect x="223" y="1085" width="14" height="14" fill="rgb(6,6,6)" data-pixel-key="example/0/attacked_pixels/26" data-pixel="0.975"/>
+<rect x="237" y="1085" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/0/attacked_pixels/27" data-pixel="0.9125"/>
+<rect x="251" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/28" data-pixel="0.0"/>
+<rect x="265" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/29" data-pixel="0.1"/>
+<rect x="279" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/30" data-pixel="0.1"/>
+<rect x="293" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/31" data-pixel="0.1"/>
+<rect x="195" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/32" data-pixel="0.0"/>
+<rect x="209" y="1099" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/33" data-pixel="0.1"/>
+<rect x="223" y="1099" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/0/attacked_pixels/34" data-pixel="1.0"/>
+<rect x="237" y="1099" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/0/attacked_pixels/35" data-pixel="0.65"/>
+<rect x="251" y="1099" width="14" height="14" fill="rgb(118,118,118)" data-pixel-key="example/0/attacked_pixels/36" data-pixel="0.5375"/>
+<rect x="265" y="1099" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/0/attacked_pixels/37" data-pixel="0.225"/>
+<rect x="279" y="1099" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/38" data-pixel="0.1"/>
+<rect x="293" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/39" data-pixel="0.0"/>
+<rect x="195" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/40" data-pixel="0.0"/>
+<rect x="209" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/41" data-pixel="0.1"/>
+<rect x="223" y="1113" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/0/attacked_pixels/42" data-pixel="0.7125"/>
+<rect x="237" y="1113" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/0/attacked_pixels/43" data-pixel="0.9"/>
+<rect x="251" y="1113" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/0/attacked_pixels/44" data-pixel="0.9125"/>
+<rect x="265" y="1113" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/0/attacked_pixels/45" data-pixel="0.9"/>
+<rect x="279" y="1113" width="14" height="14" fill="rgb(233,233,233)" data-pixel-key="example/0/attacked_pixels/46" data-pixel="0.0875"/>
+<rect x="293" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/47" data-pixel="0.0"/>
+<rect x="195" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/48" data-pixel="0.1"/>
+<rect x="209" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/0/attacked_pixels/49" data-pixel="0.1"/>
+<rect x="223" y="1127" width="14" height="14" fill="rgb(118,118,118)" data-pixel-key="example/0/attacked_pixels/50" data-pixel="0.5375"/>
+<rect x="237" y="1127" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/0/attacked_pixels/51" data-pixel="0.9"/>
+<rect x="251" y="1127" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/0/attacked_pixels/52" data-pixel="0.5875"/>
+<rect x="265" y="1127" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/0/attacked_pixels/53" data-pixel="0.8375"/>
+<rect x="279" y="1127" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/0/attacked_pixels/54" data-pixel="0.4"/>
+<rect x="293" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/55" data-pixel="0.0"/>
+<rect x="195" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/56" data-pixel="0.0"/>
+<rect x="209" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="223" y="1141" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/0/attacked_pixels/58" data-pixel="0.1625"/>
+<rect x="237" y="1141" width="14" height="14" fill="rgb(137,137,137)" data-pixel-key="example/0/attacked_pixels/59" data-pixel="0.4625"/>
+<rect x="251" y="1141" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/0/attacked_pixels/60" data-pixel="0.8375"/>
+<rect x="265" y="1141" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/0/attacked_pixels/61" data-pixel="0.5875"/>
+<rect x="279" y="1141" width="14" height="14" fill="rgb(233,233,233)" data-pixel-key="example/0/attacked_pixels/62" data-pixel="0.0875"/>
+<rect x="293" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/0/attacked_pixels/63" data-pixel="0.0"/>
+<text x="195" y="1180" class="note">Prediction</text>
+<text x="300" y="1180" class="cell" data-key="example/0/attacked_prediction">4</text>
+<text x="460" y="1007" class="note">Test row</text>
+<text x="565" y="1007" class="cell" data-key="example/1/test_row">7</text>
+<text x="670" y="1007" class="note">true</text>
+<text x="720" y="1007" class="cell" data-key="example/1/true">7</text>
+<text x="460" y="1033" class="note">Clean</text>
+<rect x="460" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/0" data-pixel="0.0"/>
+<rect x="474" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/1" data-pixel="0.0"/>
+<rect x="488" y="1043" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/1/clean_pixels/2" data-pixel="0.4375"/>
+<rect x="502" y="1043" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/1/clean_pixels/3" data-pixel="0.5"/>
+<rect x="516" y="1043" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/1/clean_pixels/4" data-pixel="0.8125"/>
+<rect x="530" y="1043" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/1/clean_pixels/5" data-pixel="1.0"/>
+<rect x="544" y="1043" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/6" data-pixel="0.9375"/>
+<rect x="558" y="1043" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/1/clean_pixels/7" data-pixel="0.0625"/>
+<rect x="460" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/8" data-pixel="0.0"/>
+<rect x="474" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/9" data-pixel="0.0"/>
+<rect x="488" y="1057" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/1/clean_pixels/10" data-pixel="0.4375"/>
+<rect x="502" y="1057" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/1/clean_pixels/11" data-pixel="0.4375"/>
+<rect x="516" y="1057" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/1/clean_pixels/12" data-pixel="0.25"/>
+<rect x="530" y="1057" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/1/clean_pixels/13" data-pixel="0.6875"/>
+<rect x="544" y="1057" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/1/clean_pixels/14" data-pixel="0.75"/>
+<rect x="558" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/15" data-pixel="0.0"/>
+<rect x="460" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/16" data-pixel="0.0"/>
+<rect x="474" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/17" data-pixel="0.0"/>
+<rect x="488" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/18" data-pixel="0.0"/>
+<rect x="502" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/19" data-pixel="0.0"/>
+<rect x="516" y="1071" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/1/clean_pixels/20" data-pixel="0.5"/>
+<rect x="530" y="1071" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/1/clean_pixels/21" data-pixel="0.8125"/>
+<rect x="544" y="1071" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/1/clean_pixels/22" data-pixel="0.0625"/>
+<rect x="558" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/23" data-pixel="0.0"/>
+<rect x="460" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/24" data-pixel="0.0"/>
+<rect x="474" y="1085" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/1/clean_pixels/25" data-pixel="0.25"/>
+<rect x="488" y="1085" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/1/clean_pixels/26" data-pixel="0.5"/>
+<rect x="502" y="1085" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/1/clean_pixels/27" data-pixel="0.5"/>
+<rect x="516" y="1085" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/28" data-pixel="0.9375"/>
+<rect x="530" y="1085" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/29" data-pixel="0.9375"/>
+<rect x="544" y="1085" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/1/clean_pixels/30" data-pixel="0.375"/>
+<rect x="558" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/31" data-pixel="0.0"/>
+<rect x="460" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/32" data-pixel="0.0"/>
+<rect x="474" y="1099" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/1/clean_pixels/33" data-pixel="0.125"/>
+<rect x="488" y="1099" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/1/clean_pixels/34" data-pixel="0.6875"/>
+<rect x="502" y="1099" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/35" data-pixel="0.9375"/>
+<rect x="516" y="1099" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/36" data-pixel="0.9375"/>
+<rect x="530" y="1099" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/1/clean_pixels/37" data-pixel="0.25"/>
+<rect x="544" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/38" data-pixel="0.0"/>
+<rect x="558" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/39" data-pixel="0.0"/>
+<rect x="460" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/40" data-pixel="0.0"/>
+<rect x="474" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/41" data-pixel="0.0"/>
+<rect x="488" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/42" data-pixel="0.0"/>
+<rect x="502" y="1113" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/1/clean_pixels/43" data-pixel="1.0"/>
+<rect x="516" y="1113" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/1/clean_pixels/44" data-pixel="0.3125"/>
+<rect x="530" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/45" data-pixel="0.0"/>
+<rect x="544" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/46" data-pixel="0.0"/>
+<rect x="558" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/47" data-pixel="0.0"/>
+<rect x="460" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/48" data-pixel="0.0"/>
+<rect x="474" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/49" data-pixel="0.0"/>
+<rect x="488" y="1127" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/1/clean_pixels/50" data-pixel="0.5625"/>
+<rect x="502" y="1127" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/1/clean_pixels/51" data-pixel="0.9375"/>
+<rect x="516" y="1127" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/1/clean_pixels/52" data-pixel="0.0625"/>
+<rect x="530" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/53" data-pixel="0.0"/>
+<rect x="544" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/54" data-pixel="0.0"/>
+<rect x="558" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/55" data-pixel="0.0"/>
+<rect x="460" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/56" data-pixel="0.0"/>
+<rect x="474" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/57" data-pixel="0.0"/>
+<rect x="488" y="1141" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/1/clean_pixels/58" data-pixel="0.8125"/>
+<rect x="502" y="1141" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/1/clean_pixels/59" data-pixel="0.3125"/>
+<rect x="516" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/60" data-pixel="0.0"/>
+<rect x="530" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/61" data-pixel="0.0"/>
+<rect x="544" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/62" data-pixel="0.0"/>
+<rect x="558" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/clean_pixels/63" data-pixel="0.0"/>
+<text x="460" y="1180" class="note">Prediction</text>
+<text x="565" y="1180" class="cell" data-key="example/1/clean_prediction">7</text>
+<text x="605" y="1033" class="note">Attacked</text>
+<rect x="605" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/0" data-pixel="0.1"/>
+<rect x="619" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/1" data-pixel="0.0"/>
+<rect x="633" y="1043" width="14" height="14" fill="rgb(169,169,169)" data-pixel-key="example/1/attacked_pixels/2" data-pixel="0.3375"/>
+<rect x="647" y="1043" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/1/attacked_pixels/3" data-pixel="0.4"/>
+<rect x="661" y="1043" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/1/attacked_pixels/4" data-pixel="0.7125"/>
+<rect x="675" y="1043" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/1/attacked_pixels/5" data-pixel="0.9"/>
+<rect x="689" y="1043" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/1/attacked_pixels/6" data-pixel="0.8375"/>
+<rect x="703" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/7" data-pixel="0.0"/>
+<rect x="605" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/8" data-pixel="0.0"/>
+<rect x="619" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/9" data-pixel="0.0"/>
+<rect x="633" y="1057" width="14" height="14" fill="rgb(169,169,169)" data-pixel-key="example/1/attacked_pixels/10" data-pixel="0.3375"/>
+<rect x="647" y="1057" width="14" height="14" fill="rgb(169,169,169)" data-pixel-key="example/1/attacked_pixels/11" data-pixel="0.3375"/>
+<rect x="661" y="1057" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/1/attacked_pixels/12" data-pixel="0.15"/>
+<rect x="675" y="1057" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/1/attacked_pixels/13" data-pixel="0.5875"/>
+<rect x="689" y="1057" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/1/attacked_pixels/14" data-pixel="0.85"/>
+<rect x="703" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/15" data-pixel="0.0"/>
+<rect x="605" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/16" data-pixel="0.1"/>
+<rect x="619" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/17" data-pixel="0.1"/>
+<rect x="633" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/18" data-pixel="0.1"/>
+<rect x="647" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/19" data-pixel="0.1"/>
+<rect x="661" y="1071" width="14" height="14" fill="rgb(102,102,102)" data-pixel-key="example/1/attacked_pixels/20" data-pixel="0.6"/>
+<rect x="675" y="1071" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/1/attacked_pixels/21" data-pixel="0.9125"/>
+<rect x="689" y="1071" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/1/attacked_pixels/22" data-pixel="0.1625"/>
+<rect x="703" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/23" data-pixel="0.0"/>
+<rect x="605" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/24" data-pixel="0.0"/>
+<rect x="619" y="1085" width="14" height="14" fill="rgb(166,166,166)" data-pixel-key="example/1/attacked_pixels/25" data-pixel="0.35"/>
+<rect x="633" y="1085" width="14" height="14" fill="rgb(102,102,102)" data-pixel-key="example/1/attacked_pixels/26" data-pixel="0.6"/>
+<rect x="647" y="1085" width="14" height="14" fill="rgb(102,102,102)" data-pixel-key="example/1/attacked_pixels/27" data-pixel="0.6"/>
+<rect x="661" y="1085" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/1/attacked_pixels/28" data-pixel="0.8375"/>
+<rect x="675" y="1085" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/1/attacked_pixels/29" data-pixel="1.0"/>
+<rect x="689" y="1085" width="14" height="14" fill="rgb(134,134,134)" data-pixel-key="example/1/attacked_pixels/30" data-pixel="0.475"/>
+<rect x="703" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/31" data-pixel="0.1"/>
+<rect x="605" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/32" data-pixel="0.0"/>
+<rect x="619" y="1099" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/1/attacked_pixels/33" data-pixel="0.225"/>
+<rect x="633" y="1099" width="14" height="14" fill="rgb(54,54,54)" data-pixel-key="example/1/attacked_pixels/34" data-pixel="0.7875"/>
+<rect x="647" y="1099" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/1/attacked_pixels/35" data-pixel="0.8375"/>
+<rect x="661" y="1099" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/1/attacked_pixels/36" data-pixel="0.8375"/>
+<rect x="675" y="1099" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/1/attacked_pixels/37" data-pixel="0.15"/>
+<rect x="689" y="1099" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/38" data-pixel="0.1"/>
+<rect x="703" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/39" data-pixel="0.0"/>
+<rect x="605" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/40" data-pixel="0.0"/>
+<rect x="619" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/41" data-pixel="0.1"/>
+<rect x="633" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/42" data-pixel="0.1"/>
+<rect x="647" y="1113" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/1/attacked_pixels/43" data-pixel="1.0"/>
+<rect x="661" y="1113" width="14" height="14" fill="rgb(150,150,150)" data-pixel-key="example/1/attacked_pixels/44" data-pixel="0.4125"/>
+<rect x="675" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/45" data-pixel="0.1"/>
+<rect x="689" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/46" data-pixel="0.0"/>
+<rect x="703" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/47" data-pixel="0.0"/>
+<rect x="605" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/48" data-pixel="0.1"/>
+<rect x="619" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/49" data-pixel="0.1"/>
+<rect x="633" y="1127" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/1/attacked_pixels/50" data-pixel="0.6625"/>
+<rect x="647" y="1127" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/1/attacked_pixels/51" data-pixel="1.0"/>
+<rect x="661" y="1127" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/1/attacked_pixels/52" data-pixel="0.1625"/>
+<rect x="675" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/53" data-pixel="0.0"/>
+<rect x="689" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/54" data-pixel="0.1"/>
+<rect x="703" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/55" data-pixel="0.0"/>
+<rect x="605" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/56" data-pixel="0.1"/>
+<rect x="619" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="633" y="1141" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/1/attacked_pixels/58" data-pixel="0.7125"/>
+<rect x="647" y="1141" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/1/attacked_pixels/59" data-pixel="0.2125"/>
+<rect x="661" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/60" data-pixel="0.1"/>
+<rect x="675" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/61" data-pixel="0.1"/>
+<rect x="689" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/1/attacked_pixels/62" data-pixel="6.938893903907228e-18"/>
+<rect x="703" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/1/attacked_pixels/63" data-pixel="0.1"/>
+<text x="605" y="1180" class="note">Prediction</text>
+<text x="710" y="1180" class="cell" data-key="example/1/attacked_prediction">4</text>
+<text x="870" y="1007" class="note">Test row</text>
+<text x="975" y="1007" class="cell" data-key="example/2/test_row">9</text>
+<text x="1080" y="1007" class="note">true</text>
+<text x="1130" y="1007" class="cell" data-key="example/2/true">9</text>
+<text x="870" y="1033" class="note">Clean</text>
+<rect x="870" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/0" data-pixel="0.0"/>
+<rect x="884" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/1" data-pixel="0.0"/>
+<rect x="898" y="1043" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/2/clean_pixels/2" data-pixel="0.6875"/>
+<rect x="912" y="1043" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/2/clean_pixels/3" data-pixel="0.75"/>
+<rect x="926" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/4" data-pixel="0.0"/>
+<rect x="940" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/5" data-pixel="0.0"/>
+<rect x="954" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/6" data-pixel="0.0"/>
+<rect x="968" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/7" data-pixel="0.0"/>
+<rect x="870" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/8" data-pixel="0.0"/>
+<rect x="884" y="1057" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/2/clean_pixels/9" data-pixel="0.125"/>
+<rect x="898" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/10" data-pixel="1.0"/>
+<rect x="912" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/11" data-pixel="1.0"/>
+<rect x="926" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/12" data-pixel="1.0"/>
+<rect x="940" y="1057" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/2/clean_pixels/13" data-pixel="0.8125"/>
+<rect x="954" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/14" data-pixel="0.0"/>
+<rect x="968" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/15" data-pixel="0.0"/>
+<rect x="870" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/16" data-pixel="0.0"/>
+<rect x="884" y="1071" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/2/clean_pixels/17" data-pixel="0.1875"/>
+<rect x="898" y="1071" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/18" data-pixel="1.0"/>
+<rect x="912" y="1071" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/2/clean_pixels/19" data-pixel="0.75"/>
+<rect x="926" y="1071" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/2/clean_pixels/20" data-pixel="0.625"/>
+<rect x="940" y="1071" width="14" height="14" fill="rgb(32,32,32)" data-pixel-key="example/2/clean_pixels/21" data-pixel="0.875"/>
+<rect x="954" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/22" data-pixel="0.0"/>
+<rect x="968" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/23" data-pixel="0.0"/>
+<rect x="870" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/24" data-pixel="0.0"/>
+<rect x="884" y="1085" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/2/clean_pixels/25" data-pixel="0.0625"/>
+<rect x="898" y="1085" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/26" data-pixel="1.0"/>
+<rect x="912" y="1085" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/2/clean_pixels/27" data-pixel="0.0625"/>
+<rect x="926" y="1085" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/2/clean_pixels/28" data-pixel="0.75"/>
+<rect x="940" y="1085" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/2/clean_pixels/29" data-pixel="0.9375"/>
+<rect x="954" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/30" data-pixel="0.0"/>
+<rect x="968" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/31" data-pixel="0.0"/>
+<rect x="870" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/32" data-pixel="0.0"/>
+<rect x="884" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/33" data-pixel="0.0"/>
+<rect x="898" y="1099" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/2/clean_pixels/34" data-pixel="0.8125"/>
+<rect x="912" y="1099" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/clean_pixels/35" data-pixel="1.0"/>
+<rect x="926" y="1099" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/2/clean_pixels/36" data-pixel="0.5625"/>
+<rect x="940" y="1099" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/2/clean_pixels/37" data-pixel="0.9375"/>
+<rect x="954" y="1099" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/2/clean_pixels/38" data-pixel="0.125"/>
+<rect x="968" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/39" data-pixel="0.0"/>
+<rect x="870" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/40" data-pixel="0.0"/>
+<rect x="884" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/41" data-pixel="0.0"/>
+<rect x="898" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/42" data-pixel="0.0"/>
+<rect x="912" y="1113" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/2/clean_pixels/43" data-pixel="0.1875"/>
+<rect x="926" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/44" data-pixel="0.0"/>
+<rect x="940" y="1113" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/2/clean_pixels/45" data-pixel="0.5625"/>
+<rect x="954" y="1113" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/2/clean_pixels/46" data-pixel="0.6875"/>
+<rect x="968" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/47" data-pixel="0.0"/>
+<rect x="870" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/48" data-pixel="0.0"/>
+<rect x="884" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/49" data-pixel="0.0"/>
+<rect x="898" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/50" data-pixel="0.0"/>
+<rect x="912" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/51" data-pixel="0.0"/>
+<rect x="926" y="1127" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/2/clean_pixels/52" data-pixel="0.5625"/>
+<rect x="940" y="1127" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/2/clean_pixels/53" data-pixel="0.9375"/>
+<rect x="954" y="1127" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/2/clean_pixels/54" data-pixel="0.25"/>
+<rect x="968" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/55" data-pixel="0.0"/>
+<rect x="870" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/56" data-pixel="0.0"/>
+<rect x="884" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/57" data-pixel="0.0"/>
+<rect x="898" y="1141" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/2/clean_pixels/58" data-pixel="0.5625"/>
+<rect x="912" y="1141" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/2/clean_pixels/59" data-pixel="0.75"/>
+<rect x="926" y="1141" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/2/clean_pixels/60" data-pixel="0.8125"/>
+<rect x="940" y="1141" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/2/clean_pixels/61" data-pixel="0.1875"/>
+<rect x="954" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/62" data-pixel="0.0"/>
+<rect x="968" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/clean_pixels/63" data-pixel="0.0"/>
+<text x="870" y="1180" class="note">Prediction</text>
+<text x="975" y="1180" class="cell" data-key="example/2/clean_prediction">9</text>
+<text x="1015" y="1033" class="note">Attacked</text>
+<rect x="1015" y="1043" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/0" data-pixel="0.0"/>
+<rect x="1029" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/1" data-pixel="0.1"/>
+<rect x="1043" y="1043" width="14" height="14" fill="rgb(54,54,54)" data-pixel-key="example/2/attacked_pixels/2" data-pixel="0.7875"/>
+<rect x="1057" y="1043" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/2/attacked_pixels/3" data-pixel="0.65"/>
+<rect x="1071" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/4" data-pixel="0.1"/>
+<rect x="1085" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/5" data-pixel="0.1"/>
+<rect x="1099" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/6" data-pixel="0.1"/>
+<rect x="1113" y="1043" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/7" data-pixel="0.1"/>
+<rect x="1015" y="1057" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/8" data-pixel="0.1"/>
+<rect x="1029" y="1057" width="14" height="14" fill="rgb(249,249,249)" data-pixel-key="example/2/attacked_pixels/9" data-pixel="0.024999999999999994"/>
+<rect x="1043" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/10" data-pixel="1.0"/>
+<rect x="1057" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/11" data-pixel="1.0"/>
+<rect x="1071" y="1057" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/12" data-pixel="1.0"/>
+<rect x="1085" y="1057" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/2/attacked_pixels/13" data-pixel="0.7125"/>
+<rect x="1099" y="1057" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/14" data-pixel="0.0"/>
+<rect x="1113" y="1057" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/15" data-pixel="0.1"/>
+<rect x="1015" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/16" data-pixel="0.1"/>
+<rect x="1029" y="1071" width="14" height="14" fill="rgb(182,182,182)" data-pixel-key="example/2/attacked_pixels/17" data-pixel="0.2875"/>
+<rect x="1043" y="1071" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/18" data-pixel="1.0"/>
+<rect x="1057" y="1071" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/2/attacked_pixels/19" data-pixel="0.85"/>
+<rect x="1071" y="1071" width="14" height="14" fill="rgb(121,121,121)" data-pixel-key="example/2/attacked_pixels/20" data-pixel="0.525"/>
+<rect x="1085" y="1071" width="14" height="14" fill="rgb(57,57,57)" data-pixel-key="example/2/attacked_pixels/21" data-pixel="0.775"/>
+<rect x="1099" y="1071" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/22" data-pixel="0.0"/>
+<rect x="1113" y="1071" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/23" data-pixel="0.1"/>
+<rect x="1015" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/24" data-pixel="0.1"/>
+<rect x="1029" y="1085" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/2/attacked_pixels/25" data-pixel="0.1625"/>
+<rect x="1043" y="1085" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/26" data-pixel="1.0"/>
+<rect x="1057" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/27" data-pixel="0.0"/>
+<rect x="1071" y="1085" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/2/attacked_pixels/28" data-pixel="0.65"/>
+<rect x="1085" y="1085" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/2/attacked_pixels/29" data-pixel="0.8375"/>
+<rect x="1099" y="1085" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/30" data-pixel="0.0"/>
+<rect x="1113" y="1085" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/31" data-pixel="0.1"/>
+<rect x="1015" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/32" data-pixel="0.0"/>
+<rect x="1029" y="1099" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/33" data-pixel="0.1"/>
+<rect x="1043" y="1099" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/2/attacked_pixels/34" data-pixel="0.7125"/>
+<rect x="1057" y="1099" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/2/attacked_pixels/35" data-pixel="0.9"/>
+<rect x="1071" y="1099" width="14" height="14" fill="rgb(137,137,137)" data-pixel-key="example/2/attacked_pixels/36" data-pixel="0.4625"/>
+<rect x="1085" y="1099" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/2/attacked_pixels/37" data-pixel="0.8375"/>
+<rect x="1099" y="1099" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/2/attacked_pixels/38" data-pixel="0.225"/>
+<rect x="1113" y="1099" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/39" data-pixel="0.0"/>
+<rect x="1015" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/40" data-pixel="0.1"/>
+<rect x="1029" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/41" data-pixel="0.0"/>
+<rect x="1043" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/42" data-pixel="0.1"/>
+<rect x="1057" y="1113" width="14" height="14" fill="rgb(182,182,182)" data-pixel-key="example/2/attacked_pixels/43" data-pixel="0.2875"/>
+<rect x="1071" y="1113" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/44" data-pixel="0.0"/>
+<rect x="1085" y="1113" width="14" height="14" fill="rgb(137,137,137)" data-pixel-key="example/2/attacked_pixels/45" data-pixel="0.4625"/>
+<rect x="1099" y="1113" width="14" height="14" fill="rgb(54,54,54)" data-pixel-key="example/2/attacked_pixels/46" data-pixel="0.7875"/>
+<rect x="1113" y="1113" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/47" data-pixel="0.1"/>
+<rect x="1015" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/48" data-pixel="0.1"/>
+<rect x="1029" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/49" data-pixel="0.0"/>
+<rect x="1043" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/50" data-pixel="0.1"/>
+<rect x="1057" y="1127" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/51" data-pixel="0.1"/>
+<rect x="1071" y="1127" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/2/attacked_pixels/52" data-pixel="0.6625"/>
+<rect x="1085" y="1127" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/2/attacked_pixels/53" data-pixel="1.0"/>
+<rect x="1099" y="1127" width="14" height="14" fill="rgb(166,166,166)" data-pixel-key="example/2/attacked_pixels/54" data-pixel="0.35"/>
+<rect x="1113" y="1127" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/55" data-pixel="0.0"/>
+<rect x="1015" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/56" data-pixel="0.1"/>
+<rect x="1029" y="1141" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/2/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="1043" y="1141" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/2/attacked_pixels/58" data-pixel="0.6625"/>
+<rect x="1057" y="1141" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/2/attacked_pixels/59" data-pixel="0.85"/>
+<rect x="1071" y="1141" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/2/attacked_pixels/60" data-pixel="0.9125"/>
+<rect x="1085" y="1141" width="14" height="14" fill="rgb(182,182,182)" data-pixel-key="example/2/attacked_pixels/61" data-pixel="0.2875"/>
+<rect x="1099" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/62" data-pixel="0.1"/>
+<rect x="1113" y="1141" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/2/attacked_pixels/63" data-pixel="0.1"/>
+<text x="1015" y="1180" class="note">Prediction</text>
+<text x="1120" y="1180" class="cell" data-key="example/2/attacked_prediction">5</text>
+<text x="50" y="1214" class="note">Test row</text>
+<text x="155" y="1214" class="cell" data-key="example/3/test_row">0</text>
+<text x="260" y="1214" class="note">true</text>
+<text x="310" y="1214" class="cell" data-key="example/3/true">0</text>
+<text x="50" y="1240" class="note">Clean</text>
+<rect x="50" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/0" data-pixel="0.0"/>
+<rect x="64" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/1" data-pixel="0.0"/>
+<rect x="78" y="1250" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/3/clean_pixels/2" data-pixel="0.3125"/>
+<rect x="92" y="1250" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/3/clean_pixels/3" data-pixel="0.8125"/>
+<rect x="106" y="1250" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/3/clean_pixels/4" data-pixel="0.5625"/>
+<rect x="120" y="1250" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/3/clean_pixels/5" data-pixel="0.0625"/>
+<rect x="134" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/6" data-pixel="0.0"/>
+<rect x="148" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/7" data-pixel="0.0"/>
+<rect x="50" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/8" data-pixel="0.0"/>
+<rect x="64" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/9" data-pixel="0.0"/>
+<rect x="78" y="1264" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/3/clean_pixels/10" data-pixel="0.8125"/>
+<rect x="92" y="1264" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/3/clean_pixels/11" data-pixel="0.9375"/>
+<rect x="106" y="1264" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/3/clean_pixels/12" data-pixel="0.625"/>
+<rect x="120" y="1264" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/3/clean_pixels/13" data-pixel="0.9375"/>
+<rect x="134" y="1264" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/3/clean_pixels/14" data-pixel="0.3125"/>
+<rect x="148" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/15" data-pixel="0.0"/>
+<rect x="50" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/16" data-pixel="0.0"/>
+<rect x="64" y="1278" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/3/clean_pixels/17" data-pixel="0.1875"/>
+<rect x="78" y="1278" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/3/clean_pixels/18" data-pixel="0.9375"/>
+<rect x="92" y="1278" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/3/clean_pixels/19" data-pixel="0.125"/>
+<rect x="106" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/20" data-pixel="0.0"/>
+<rect x="120" y="1278" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/3/clean_pixels/21" data-pixel="0.6875"/>
+<rect x="134" y="1278" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/3/clean_pixels/22" data-pixel="0.5"/>
+<rect x="148" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/23" data-pixel="0.0"/>
+<rect x="50" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/24" data-pixel="0.0"/>
+<rect x="64" y="1292" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/3/clean_pixels/25" data-pixel="0.25"/>
+<rect x="78" y="1292" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/3/clean_pixels/26" data-pixel="0.75"/>
+<rect x="92" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/27" data-pixel="0.0"/>
+<rect x="106" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/28" data-pixel="0.0"/>
+<rect x="120" y="1292" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/3/clean_pixels/29" data-pixel="0.5"/>
+<rect x="134" y="1292" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/3/clean_pixels/30" data-pixel="0.5"/>
+<rect x="148" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/31" data-pixel="0.0"/>
+<rect x="50" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/32" data-pixel="0.0"/>
+<rect x="64" y="1306" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/3/clean_pixels/33" data-pixel="0.3125"/>
+<rect x="78" y="1306" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/3/clean_pixels/34" data-pixel="0.5"/>
+<rect x="92" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/35" data-pixel="0.0"/>
+<rect x="106" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/36" data-pixel="0.0"/>
+<rect x="120" y="1306" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/3/clean_pixels/37" data-pixel="0.5625"/>
+<rect x="134" y="1306" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/3/clean_pixels/38" data-pixel="0.5"/>
+<rect x="148" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/39" data-pixel="0.0"/>
+<rect x="50" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/40" data-pixel="0.0"/>
+<rect x="64" y="1320" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/3/clean_pixels/41" data-pixel="0.25"/>
+<rect x="78" y="1320" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/3/clean_pixels/42" data-pixel="0.6875"/>
+<rect x="92" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/43" data-pixel="0.0"/>
+<rect x="106" y="1320" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/3/clean_pixels/44" data-pixel="0.0625"/>
+<rect x="120" y="1320" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/3/clean_pixels/45" data-pixel="0.75"/>
+<rect x="134" y="1320" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/3/clean_pixels/46" data-pixel="0.4375"/>
+<rect x="148" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/47" data-pixel="0.0"/>
+<rect x="50" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/48" data-pixel="0.0"/>
+<rect x="64" y="1334" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/3/clean_pixels/49" data-pixel="0.125"/>
+<rect x="78" y="1334" width="14" height="14" fill="rgb(32,32,32)" data-pixel-key="example/3/clean_pixels/50" data-pixel="0.875"/>
+<rect x="92" y="1334" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/3/clean_pixels/51" data-pixel="0.3125"/>
+<rect x="106" y="1334" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/3/clean_pixels/52" data-pixel="0.625"/>
+<rect x="120" y="1334" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/3/clean_pixels/53" data-pixel="0.75"/>
+<rect x="134" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/54" data-pixel="0.0"/>
+<rect x="148" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/55" data-pixel="0.0"/>
+<rect x="50" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/56" data-pixel="0.0"/>
+<rect x="64" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/57" data-pixel="0.0"/>
+<rect x="78" y="1348" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/3/clean_pixels/58" data-pixel="0.375"/>
+<rect x="92" y="1348" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/3/clean_pixels/59" data-pixel="0.8125"/>
+<rect x="106" y="1348" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/3/clean_pixels/60" data-pixel="0.625"/>
+<rect x="120" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/61" data-pixel="0.0"/>
+<rect x="134" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/62" data-pixel="0.0"/>
+<rect x="148" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/clean_pixels/63" data-pixel="0.0"/>
+<text x="50" y="1387" class="note">Prediction</text>
+<text x="155" y="1387" class="cell" data-key="example/3/clean_prediction">0</text>
+<text x="195" y="1240" class="note">Attacked</text>
+<rect x="195" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/0" data-pixel="0.0"/>
+<rect x="209" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/1" data-pixel="0.1"/>
+<rect x="223" y="1250" width="14" height="14" fill="rgb(150,150,150)" data-pixel-key="example/3/attacked_pixels/2" data-pixel="0.4125"/>
+<rect x="237" y="1250" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/3/attacked_pixels/3" data-pixel="0.9125"/>
+<rect x="251" y="1250" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/3/attacked_pixels/4" data-pixel="0.6625"/>
+<rect x="265" y="1250" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/3/attacked_pixels/5" data-pixel="0.1625"/>
+<rect x="279" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/6" data-pixel="0.1"/>
+<rect x="293" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/7" data-pixel="0.1"/>
+<rect x="195" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/8" data-pixel="0.1"/>
+<rect x="209" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/9" data-pixel="0.1"/>
+<rect x="223" y="1264" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/3/attacked_pixels/10" data-pixel="0.9125"/>
+<rect x="237" y="1264" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/3/attacked_pixels/11" data-pixel="1.0"/>
+<rect x="251" y="1264" width="14" height="14" fill="rgb(70,70,70)" data-pixel-key="example/3/attacked_pixels/12" data-pixel="0.725"/>
+<rect x="265" y="1264" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/3/attacked_pixels/13" data-pixel="1.0"/>
+<rect x="279" y="1264" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/3/attacked_pixels/14" data-pixel="0.2125"/>
+<rect x="293" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/15" data-pixel="0.0"/>
+<rect x="195" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/16" data-pixel="0.1"/>
+<rect x="209" y="1278" width="14" height="14" fill="rgb(233,233,233)" data-pixel-key="example/3/attacked_pixels/17" data-pixel="0.0875"/>
+<rect x="223" y="1278" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/3/attacked_pixels/18" data-pixel="0.8375"/>
+<rect x="237" y="1278" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/3/attacked_pixels/19" data-pixel="0.225"/>
+<rect x="251" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/20" data-pixel="0.1"/>
+<rect x="265" y="1278" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/3/attacked_pixels/21" data-pixel="0.5875"/>
+<rect x="279" y="1278" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/3/attacked_pixels/22" data-pixel="0.4"/>
+<rect x="293" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/23" data-pixel="0.1"/>
+<rect x="195" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/24" data-pixel="0.1"/>
+<rect x="209" y="1292" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/3/attacked_pixels/25" data-pixel="0.15"/>
+<rect x="223" y="1292" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/3/attacked_pixels/26" data-pixel="0.65"/>
+<rect x="237" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/27" data-pixel="0.1"/>
+<rect x="251" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/28" data-pixel="0.1"/>
+<rect x="265" y="1292" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/3/attacked_pixels/29" data-pixel="0.4"/>
+<rect x="279" y="1292" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/3/attacked_pixels/30" data-pixel="0.4"/>
+<rect x="293" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/31" data-pixel="0.1"/>
+<rect x="195" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/32" data-pixel="0.1"/>
+<rect x="209" y="1306" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/3/attacked_pixels/33" data-pixel="0.2125"/>
+<rect x="223" y="1306" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/3/attacked_pixels/34" data-pixel="0.4"/>
+<rect x="237" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/35" data-pixel="0.1"/>
+<rect x="251" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/36" data-pixel="0.1"/>
+<rect x="265" y="1306" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/3/attacked_pixels/37" data-pixel="0.6625"/>
+<rect x="279" y="1306" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/3/attacked_pixels/38" data-pixel="0.4"/>
+<rect x="293" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/39" data-pixel="0.1"/>
+<rect x="195" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/40" data-pixel="0.1"/>
+<rect x="209" y="1320" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/3/attacked_pixels/41" data-pixel="0.15"/>
+<rect x="223" y="1320" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/3/attacked_pixels/42" data-pixel="0.5875"/>
+<rect x="237" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/43" data-pixel="0.0"/>
+<rect x="251" y="1320" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/3/attacked_pixels/44" data-pixel="0.1625"/>
+<rect x="265" y="1320" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/3/attacked_pixels/45" data-pixel="0.65"/>
+<rect x="279" y="1320" width="14" height="14" fill="rgb(118,118,118)" data-pixel-key="example/3/attacked_pixels/46" data-pixel="0.5375"/>
+<rect x="293" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/47" data-pixel="0.1"/>
+<rect x="195" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/48" data-pixel="0.0"/>
+<rect x="209" y="1334" width="14" height="14" fill="rgb(249,249,249)" data-pixel-key="example/3/attacked_pixels/49" data-pixel="0.025000000000000036"/>
+<rect x="223" y="1334" width="14" height="14" fill="rgb(57,57,57)" data-pixel-key="example/3/attacked_pixels/50" data-pixel="0.775"/>
+<rect x="237" y="1334" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/3/attacked_pixels/51" data-pixel="0.2125"/>
+<rect x="251" y="1334" width="14" height="14" fill="rgb(121,121,121)" data-pixel-key="example/3/attacked_pixels/52" data-pixel="0.525"/>
+<rect x="265" y="1334" width="14" height="14" fill="rgb(89,89,89)" data-pixel-key="example/3/attacked_pixels/53" data-pixel="0.65"/>
+<rect x="279" y="1334" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/54" data-pixel="0.1"/>
+<rect x="293" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/55" data-pixel="0.0"/>
+<rect x="195" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/56" data-pixel="0.0"/>
+<rect x="209" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="223" y="1348" width="14" height="14" fill="rgb(134,134,134)" data-pixel-key="example/3/attacked_pixels/58" data-pixel="0.475"/>
+<rect x="237" y="1348" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/3/attacked_pixels/59" data-pixel="0.9125"/>
+<rect x="251" y="1348" width="14" height="14" fill="rgb(121,121,121)" data-pixel-key="example/3/attacked_pixels/60" data-pixel="0.525"/>
+<rect x="265" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/61" data-pixel="0.0"/>
+<rect x="279" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/3/attacked_pixels/62" data-pixel="0.0"/>
+<rect x="293" y="1348" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/3/attacked_pixels/63" data-pixel="0.1"/>
+<text x="195" y="1387" class="note">Prediction</text>
+<text x="300" y="1387" class="cell" data-key="example/3/attacked_prediction">0</text>
+<text x="460" y="1214" class="note">Test row</text>
+<text x="565" y="1214" class="cell" data-key="example/4/test_row">1</text>
+<text x="670" y="1214" class="note">true</text>
+<text x="720" y="1214" class="cell" data-key="example/4/true">1</text>
+<text x="460" y="1240" class="note">Clean</text>
+<rect x="460" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/0" data-pixel="0.0"/>
+<rect x="474" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/1" data-pixel="0.0"/>
+<rect x="488" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/2" data-pixel="0.0"/>
+<rect x="502" y="1250" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/4/clean_pixels/3" data-pixel="0.75"/>
+<rect x="516" y="1250" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/4/clean_pixels/4" data-pixel="0.8125"/>
+<rect x="530" y="1250" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/4/clean_pixels/5" data-pixel="0.3125"/>
+<rect x="544" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/6" data-pixel="0.0"/>
+<rect x="558" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/7" data-pixel="0.0"/>
+<rect x="460" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/8" data-pixel="0.0"/>
+<rect x="474" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/9" data-pixel="0.0"/>
+<rect x="488" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/10" data-pixel="0.0"/>
+<rect x="502" y="1264" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/4/clean_pixels/11" data-pixel="0.6875"/>
+<rect x="516" y="1264" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/12" data-pixel="1.0"/>
+<rect x="530" y="1264" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/4/clean_pixels/13" data-pixel="0.5625"/>
+<rect x="544" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/14" data-pixel="0.0"/>
+<rect x="558" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/15" data-pixel="0.0"/>
+<rect x="460" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/16" data-pixel="0.0"/>
+<rect x="474" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/17" data-pixel="0.0"/>
+<rect x="488" y="1278" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/4/clean_pixels/18" data-pixel="0.1875"/>
+<rect x="502" y="1278" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/4/clean_pixels/19" data-pixel="0.9375"/>
+<rect x="516" y="1278" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/20" data-pixel="1.0"/>
+<rect x="530" y="1278" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/4/clean_pixels/21" data-pixel="0.375"/>
+<rect x="544" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/22" data-pixel="0.0"/>
+<rect x="558" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/23" data-pixel="0.0"/>
+<rect x="460" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/24" data-pixel="0.0"/>
+<rect x="474" y="1292" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/4/clean_pixels/25" data-pixel="0.4375"/>
+<rect x="488" y="1292" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/4/clean_pixels/26" data-pixel="0.9375"/>
+<rect x="502" y="1292" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/27" data-pixel="1.0"/>
+<rect x="516" y="1292" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/28" data-pixel="1.0"/>
+<rect x="530" y="1292" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/4/clean_pixels/29" data-pixel="0.125"/>
+<rect x="544" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/30" data-pixel="0.0"/>
+<rect x="558" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/31" data-pixel="0.0"/>
+<rect x="460" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/32" data-pixel="0.0"/>
+<rect x="474" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/33" data-pixel="0.0"/>
+<rect x="488" y="1306" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/4/clean_pixels/34" data-pixel="0.0625"/>
+<rect x="502" y="1306" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/35" data-pixel="1.0"/>
+<rect x="516" y="1306" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/36" data-pixel="1.0"/>
+<rect x="530" y="1306" width="14" height="14" fill="rgb(207,207,207)" data-pixel-key="example/4/clean_pixels/37" data-pixel="0.1875"/>
+<rect x="544" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/38" data-pixel="0.0"/>
+<rect x="558" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/39" data-pixel="0.0"/>
+<rect x="460" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/40" data-pixel="0.0"/>
+<rect x="474" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/41" data-pixel="0.0"/>
+<rect x="488" y="1320" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/4/clean_pixels/42" data-pixel="0.0625"/>
+<rect x="502" y="1320" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/43" data-pixel="1.0"/>
+<rect x="516" y="1320" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/44" data-pixel="1.0"/>
+<rect x="530" y="1320" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/4/clean_pixels/45" data-pixel="0.375"/>
+<rect x="544" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/46" data-pixel="0.0"/>
+<rect x="558" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/47" data-pixel="0.0"/>
+<rect x="460" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/48" data-pixel="0.0"/>
+<rect x="474" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/49" data-pixel="0.0"/>
+<rect x="488" y="1334" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/4/clean_pixels/50" data-pixel="0.0625"/>
+<rect x="502" y="1334" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/51" data-pixel="1.0"/>
+<rect x="516" y="1334" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/52" data-pixel="1.0"/>
+<rect x="530" y="1334" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/4/clean_pixels/53" data-pixel="0.375"/>
+<rect x="544" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/54" data-pixel="0.0"/>
+<rect x="558" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/55" data-pixel="0.0"/>
+<rect x="460" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/56" data-pixel="0.0"/>
+<rect x="474" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/57" data-pixel="0.0"/>
+<rect x="488" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/58" data-pixel="0.0"/>
+<rect x="502" y="1348" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/4/clean_pixels/59" data-pixel="0.6875"/>
+<rect x="516" y="1348" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/clean_pixels/60" data-pixel="1.0"/>
+<rect x="530" y="1348" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/4/clean_pixels/61" data-pixel="0.625"/>
+<rect x="544" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/62" data-pixel="0.0"/>
+<rect x="558" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/clean_pixels/63" data-pixel="0.0"/>
+<text x="460" y="1387" class="note">Prediction</text>
+<text x="565" y="1387" class="cell" data-key="example/4/clean_prediction">1</text>
+<text x="605" y="1240" class="note">Attacked</text>
+<rect x="605" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/0" data-pixel="0.1"/>
+<rect x="619" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/1" data-pixel="0.1"/>
+<rect x="633" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/2" data-pixel="0.0"/>
+<rect x="647" y="1250" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/4/attacked_pixels/3" data-pixel="0.85"/>
+<rect x="661" y="1250" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/4/attacked_pixels/4" data-pixel="0.9125"/>
+<rect x="675" y="1250" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/4/attacked_pixels/5" data-pixel="0.2125"/>
+<rect x="689" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/6" data-pixel="0.1"/>
+<rect x="703" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/7" data-pixel="0.1"/>
+<rect x="605" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/8" data-pixel="0.1"/>
+<rect x="619" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/9" data-pixel="0.1"/>
+<rect x="633" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/10" data-pixel="0.1"/>
+<rect x="647" y="1264" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/4/attacked_pixels/11" data-pixel="0.5875"/>
+<rect x="661" y="1264" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/12" data-pixel="0.9"/>
+<rect x="675" y="1264" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/4/attacked_pixels/13" data-pixel="0.6625"/>
+<rect x="689" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/14" data-pixel="0.1"/>
+<rect x="703" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/15" data-pixel="0.1"/>
+<rect x="605" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/16" data-pixel="0.0"/>
+<rect x="619" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/17" data-pixel="0.1"/>
+<rect x="633" y="1278" width="14" height="14" fill="rgb(182,182,182)" data-pixel-key="example/4/attacked_pixels/18" data-pixel="0.2875"/>
+<rect x="647" y="1278" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/4/attacked_pixels/19" data-pixel="0.8375"/>
+<rect x="661" y="1278" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/20" data-pixel="0.9"/>
+<rect x="675" y="1278" width="14" height="14" fill="rgb(134,134,134)" data-pixel-key="example/4/attacked_pixels/21" data-pixel="0.475"/>
+<rect x="689" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/22" data-pixel="0.1"/>
+<rect x="703" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/23" data-pixel="0.0"/>
+<rect x="605" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/24" data-pixel="0.1"/>
+<rect x="619" y="1292" width="14" height="14" fill="rgb(169,169,169)" data-pixel-key="example/4/attacked_pixels/25" data-pixel="0.3375"/>
+<rect x="633" y="1292" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/4/attacked_pixels/26" data-pixel="0.8375"/>
+<rect x="647" y="1292" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/attacked_pixels/27" data-pixel="1.0"/>
+<rect x="661" y="1292" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/attacked_pixels/28" data-pixel="1.0"/>
+<rect x="675" y="1292" width="14" height="14" fill="rgb(249,249,249)" data-pixel-key="example/4/attacked_pixels/29" data-pixel="0.024999999999999994"/>
+<rect x="689" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/30" data-pixel="0.0"/>
+<rect x="703" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/31" data-pixel="0.0"/>
+<rect x="605" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/32" data-pixel="0.1"/>
+<rect x="619" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/33" data-pixel="0.0"/>
+<rect x="633" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/34" data-pixel="0.0"/>
+<rect x="647" y="1306" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/attacked_pixels/35" data-pixel="1.0"/>
+<rect x="661" y="1306" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/36" data-pixel="0.9"/>
+<rect x="675" y="1306" width="14" height="14" fill="rgb(233,233,233)" data-pixel-key="example/4/attacked_pixels/37" data-pixel="0.0875"/>
+<rect x="689" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/38" data-pixel="0.0"/>
+<rect x="703" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/39" data-pixel="0.0"/>
+<rect x="605" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/40" data-pixel="0.1"/>
+<rect x="619" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/41" data-pixel="0.1"/>
+<rect x="633" y="1320" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/4/attacked_pixels/42" data-pixel="0.1625"/>
+<rect x="647" y="1320" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/43" data-pixel="0.9"/>
+<rect x="661" y="1320" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/44" data-pixel="0.9"/>
+<rect x="675" y="1320" width="14" height="14" fill="rgb(134,134,134)" data-pixel-key="example/4/attacked_pixels/45" data-pixel="0.475"/>
+<rect x="689" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/46" data-pixel="0.1"/>
+<rect x="703" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/47" data-pixel="0.1"/>
+<rect x="605" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/48" data-pixel="0.0"/>
+<rect x="619" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/49" data-pixel="0.0"/>
+<rect x="633" y="1334" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/4/attacked_pixels/50" data-pixel="0.1625"/>
+<rect x="647" y="1334" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/51" data-pixel="0.9"/>
+<rect x="661" y="1334" width="14" height="14" fill="rgb(25,25,25)" data-pixel-key="example/4/attacked_pixels/52" data-pixel="0.9"/>
+<rect x="675" y="1334" width="14" height="14" fill="rgb(134,134,134)" data-pixel-key="example/4/attacked_pixels/53" data-pixel="0.475"/>
+<rect x="689" y="1334" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/54" data-pixel="0.1"/>
+<rect x="703" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/55" data-pixel="0.0"/>
+<rect x="605" y="1348" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/4/attacked_pixels/56" data-pixel="0.1"/>
+<rect x="619" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="633" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/58" data-pixel="0.0"/>
+<rect x="647" y="1348" width="14" height="14" fill="rgb(54,54,54)" data-pixel-key="example/4/attacked_pixels/59" data-pixel="0.7875"/>
+<rect x="661" y="1348" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/4/attacked_pixels/60" data-pixel="1.0"/>
+<rect x="675" y="1348" width="14" height="14" fill="rgb(121,121,121)" data-pixel-key="example/4/attacked_pixels/61" data-pixel="0.525"/>
+<rect x="689" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/62" data-pixel="0.0"/>
+<rect x="703" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/4/attacked_pixels/63" data-pixel="0.0"/>
+<text x="605" y="1387" class="note">Prediction</text>
+<text x="710" y="1387" class="cell" data-key="example/4/attacked_prediction">1</text>
+<text x="870" y="1214" class="note">Test row</text>
+<text x="975" y="1214" class="cell" data-key="example/5/test_row">3</text>
+<text x="1080" y="1214" class="note">true</text>
+<text x="1130" y="1214" class="cell" data-key="example/5/true">3</text>
+<text x="870" y="1240" class="note">Clean</text>
+<rect x="870" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/0" data-pixel="0.0"/>
+<rect x="884" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/1" data-pixel="0.0"/>
+<rect x="898" y="1250" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/5/clean_pixels/2" data-pixel="0.4375"/>
+<rect x="912" y="1250" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/5/clean_pixels/3" data-pixel="0.9375"/>
+<rect x="926" y="1250" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/4" data-pixel="0.8125"/>
+<rect x="940" y="1250" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/5" data-pixel="0.0625"/>
+<rect x="954" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/6" data-pixel="0.0"/>
+<rect x="968" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/7" data-pixel="0.0"/>
+<rect x="870" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/8" data-pixel="0.0"/>
+<rect x="884" y="1264" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/5/clean_pixels/9" data-pixel="0.5"/>
+<rect x="898" y="1264" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/10" data-pixel="0.8125"/>
+<rect x="912" y="1264" width="14" height="14" fill="rgb(159,159,159)" data-pixel-key="example/5/clean_pixels/11" data-pixel="0.375"/>
+<rect x="926" y="1264" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/5/clean_pixels/12" data-pixel="0.9375"/>
+<rect x="940" y="1264" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/5/clean_pixels/13" data-pixel="0.25"/>
+<rect x="954" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/14" data-pixel="0.0"/>
+<rect x="968" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/15" data-pixel="0.0"/>
+<rect x="870" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/16" data-pixel="0.0"/>
+<rect x="884" y="1278" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/5/clean_pixels/17" data-pixel="0.125"/>
+<rect x="898" y="1278" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/18" data-pixel="0.0625"/>
+<rect x="912" y="1278" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/19" data-pixel="0.8125"/>
+<rect x="926" y="1278" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/20" data-pixel="0.8125"/>
+<rect x="940" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/21" data-pixel="0.0"/>
+<rect x="954" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/22" data-pixel="0.0"/>
+<rect x="968" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/23" data-pixel="0.0"/>
+<rect x="870" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/24" data-pixel="0.0"/>
+<rect x="884" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/25" data-pixel="0.0"/>
+<rect x="898" y="1292" width="14" height="14" fill="rgb(223,223,223)" data-pixel-key="example/5/clean_pixels/26" data-pixel="0.125"/>
+<rect x="912" y="1292" width="14" height="14" fill="rgb(16,16,16)" data-pixel-key="example/5/clean_pixels/27" data-pixel="0.9375"/>
+<rect x="926" y="1292" width="14" height="14" fill="rgb(80,80,80)" data-pixel-key="example/5/clean_pixels/28" data-pixel="0.6875"/>
+<rect x="940" y="1292" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/29" data-pixel="0.0625"/>
+<rect x="954" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/30" data-pixel="0.0"/>
+<rect x="968" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/31" data-pixel="0.0"/>
+<rect x="870" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/32" data-pixel="0.0"/>
+<rect x="884" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/33" data-pixel="0.0"/>
+<rect x="898" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/34" data-pixel="0.0"/>
+<rect x="912" y="1306" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/35" data-pixel="0.0625"/>
+<rect x="926" y="1306" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/5/clean_pixels/36" data-pixel="0.75"/>
+<rect x="940" y="1306" width="14" height="14" fill="rgb(64,64,64)" data-pixel-key="example/5/clean_pixels/37" data-pixel="0.75"/>
+<rect x="954" y="1306" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/38" data-pixel="0.0625"/>
+<rect x="968" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/39" data-pixel="0.0"/>
+<rect x="870" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/40" data-pixel="0.0"/>
+<rect x="884" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/41" data-pixel="0.0"/>
+<rect x="898" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/42" data-pixel="0.0"/>
+<rect x="912" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/43" data-pixel="0.0"/>
+<rect x="926" y="1320" width="14" height="14" fill="rgb(239,239,239)" data-pixel-key="example/5/clean_pixels/44" data-pixel="0.0625"/>
+<rect x="940" y="1320" width="14" height="14" fill="rgb(96,96,96)" data-pixel-key="example/5/clean_pixels/45" data-pixel="0.625"/>
+<rect x="954" y="1320" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/5/clean_pixels/46" data-pixel="0.5"/>
+<rect x="968" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/47" data-pixel="0.0"/>
+<rect x="870" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/48" data-pixel="0.0"/>
+<rect x="884" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/49" data-pixel="0.0"/>
+<rect x="898" y="1334" width="14" height="14" fill="rgb(128,128,128)" data-pixel-key="example/5/clean_pixels/50" data-pixel="0.5"/>
+<rect x="912" y="1334" width="14" height="14" fill="rgb(191,191,191)" data-pixel-key="example/5/clean_pixels/51" data-pixel="0.25"/>
+<rect x="926" y="1334" width="14" height="14" fill="rgb(175,175,175)" data-pixel-key="example/5/clean_pixels/52" data-pixel="0.3125"/>
+<rect x="940" y="1334" width="14" height="14" fill="rgb(32,32,32)" data-pixel-key="example/5/clean_pixels/53" data-pixel="0.875"/>
+<rect x="954" y="1334" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/5/clean_pixels/54" data-pixel="0.5625"/>
+<rect x="968" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/55" data-pixel="0.0"/>
+<rect x="870" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/56" data-pixel="0.0"/>
+<rect x="884" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/57" data-pixel="0.0"/>
+<rect x="898" y="1348" width="14" height="14" fill="rgb(143,143,143)" data-pixel-key="example/5/clean_pixels/58" data-pixel="0.4375"/>
+<rect x="912" y="1348" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/59" data-pixel="0.8125"/>
+<rect x="926" y="1348" width="14" height="14" fill="rgb(48,48,48)" data-pixel-key="example/5/clean_pixels/60" data-pixel="0.8125"/>
+<rect x="940" y="1348" width="14" height="14" fill="rgb(112,112,112)" data-pixel-key="example/5/clean_pixels/61" data-pixel="0.5625"/>
+<rect x="954" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/62" data-pixel="0.0"/>
+<rect x="968" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/clean_pixels/63" data-pixel="0.0"/>
+<text x="870" y="1387" class="note">Prediction</text>
+<text x="975" y="1387" class="cell" data-key="example/5/clean_prediction">3</text>
+<text x="1015" y="1240" class="note">Attacked</text>
+<rect x="1015" y="1250" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/0" data-pixel="0.1"/>
+<rect x="1029" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/1" data-pixel="0.0"/>
+<rect x="1043" y="1250" width="14" height="14" fill="rgb(118,118,118)" data-pixel-key="example/5/attacked_pixels/2" data-pixel="0.5375"/>
+<rect x="1057" y="1250" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/5/attacked_pixels/3" data-pixel="1.0"/>
+<rect x="1071" y="1250" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/5/attacked_pixels/4" data-pixel="0.7125"/>
+<rect x="1085" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/5" data-pixel="0.0"/>
+<rect x="1099" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/6" data-pixel="0.0"/>
+<rect x="1113" y="1250" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/7" data-pixel="0.0"/>
+<rect x="1015" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/8" data-pixel="0.0"/>
+<rect x="1029" y="1264" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/5/attacked_pixels/9" data-pixel="0.4"/>
+<rect x="1043" y="1264" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/5/attacked_pixels/10" data-pixel="0.7125"/>
+<rect x="1057" y="1264" width="14" height="14" fill="rgb(185,185,185)" data-pixel-key="example/5/attacked_pixels/11" data-pixel="0.275"/>
+<rect x="1071" y="1264" width="14" height="14" fill="rgb(41,41,41)" data-pixel-key="example/5/attacked_pixels/12" data-pixel="0.8375"/>
+<rect x="1085" y="1264" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/5/attacked_pixels/13" data-pixel="0.15"/>
+<rect x="1099" y="1264" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/14" data-pixel="0.1"/>
+<rect x="1113" y="1264" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/15" data-pixel="0.0"/>
+<rect x="1015" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/16" data-pixel="0.0"/>
+<rect x="1029" y="1278" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/5/attacked_pixels/17" data-pixel="0.225"/>
+<rect x="1043" y="1278" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/5/attacked_pixels/18" data-pixel="0.1625"/>
+<rect x="1057" y="1278" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/5/attacked_pixels/19" data-pixel="0.9125"/>
+<rect x="1071" y="1278" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/5/attacked_pixels/20" data-pixel="0.9125"/>
+<rect x="1085" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/21" data-pixel="0.1"/>
+<rect x="1099" y="1278" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/22" data-pixel="0.1"/>
+<rect x="1113" y="1278" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/23" data-pixel="0.0"/>
+<rect x="1015" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/24" data-pixel="0.1"/>
+<rect x="1029" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/25" data-pixel="0.1"/>
+<rect x="1043" y="1292" width="14" height="14" fill="rgb(198,198,198)" data-pixel-key="example/5/attacked_pixels/26" data-pixel="0.225"/>
+<rect x="1057" y="1292" width="14" height="14" fill="rgb(0,0,0)" data-pixel-key="example/5/attacked_pixels/27" data-pixel="1.0"/>
+<rect x="1071" y="1292" width="14" height="14" fill="rgb(105,105,105)" data-pixel-key="example/5/attacked_pixels/28" data-pixel="0.5875"/>
+<rect x="1085" y="1292" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/5/attacked_pixels/29" data-pixel="0.1625"/>
+<rect x="1099" y="1292" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/30" data-pixel="0.1"/>
+<rect x="1113" y="1292" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/31" data-pixel="0.0"/>
+<rect x="1015" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/32" data-pixel="0.0"/>
+<rect x="1029" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/33" data-pixel="0.0"/>
+<rect x="1043" y="1306" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/34" data-pixel="0.1"/>
+<rect x="1057" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/35" data-pixel="0.0"/>
+<rect x="1071" y="1306" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/5/attacked_pixels/36" data-pixel="0.85"/>
+<rect x="1085" y="1306" width="14" height="14" fill="rgb(38,38,38)" data-pixel-key="example/5/attacked_pixels/37" data-pixel="0.85"/>
+<rect x="1099" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/38" data-pixel="0.0"/>
+<rect x="1113" y="1306" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/39" data-pixel="0.0"/>
+<rect x="1015" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/40" data-pixel="0.0"/>
+<rect x="1029" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/41" data-pixel="0.1"/>
+<rect x="1043" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/42" data-pixel="0.1"/>
+<rect x="1057" y="1320" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/43" data-pixel="0.1"/>
+<rect x="1071" y="1320" width="14" height="14" fill="rgb(214,214,214)" data-pixel-key="example/5/attacked_pixels/44" data-pixel="0.1625"/>
+<rect x="1085" y="1320" width="14" height="14" fill="rgb(121,121,121)" data-pixel-key="example/5/attacked_pixels/45" data-pixel="0.525"/>
+<rect x="1099" y="1320" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/5/attacked_pixels/46" data-pixel="0.4"/>
+<rect x="1113" y="1320" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/47" data-pixel="0.0"/>
+<rect x="1015" y="1334" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/48" data-pixel="0.0"/>
+<rect x="1029" y="1334" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/49" data-pixel="0.1"/>
+<rect x="1043" y="1334" width="14" height="14" fill="rgb(153,153,153)" data-pixel-key="example/5/attacked_pixels/50" data-pixel="0.4"/>
+<rect x="1057" y="1334" width="14" height="14" fill="rgb(217,217,217)" data-pixel-key="example/5/attacked_pixels/51" data-pixel="0.15"/>
+<rect x="1071" y="1334" width="14" height="14" fill="rgb(201,201,201)" data-pixel-key="example/5/attacked_pixels/52" data-pixel="0.2125"/>
+<rect x="1085" y="1334" width="14" height="14" fill="rgb(57,57,57)" data-pixel-key="example/5/attacked_pixels/53" data-pixel="0.775"/>
+<rect x="1099" y="1334" width="14" height="14" fill="rgb(137,137,137)" data-pixel-key="example/5/attacked_pixels/54" data-pixel="0.4625"/>
+<rect x="1113" y="1334" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/55" data-pixel="0.1"/>
+<rect x="1015" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/56" data-pixel="0.0"/>
+<rect x="1029" y="1348" width="14" height="14" fill="rgb(255,255,255)" data-pixel-key="example/5/attacked_pixels/57" data-pixel="0.0"/>
+<rect x="1043" y="1348" width="14" height="14" fill="rgb(169,169,169)" data-pixel-key="example/5/attacked_pixels/58" data-pixel="0.3375"/>
+<rect x="1057" y="1348" width="14" height="14" fill="rgb(73,73,73)" data-pixel-key="example/5/attacked_pixels/59" data-pixel="0.7125"/>
+<rect x="1071" y="1348" width="14" height="14" fill="rgb(22,22,22)" data-pixel-key="example/5/attacked_pixels/60" data-pixel="0.9125"/>
+<rect x="1085" y="1348" width="14" height="14" fill="rgb(86,86,86)" data-pixel-key="example/5/attacked_pixels/61" data-pixel="0.6625"/>
+<rect x="1099" y="1348" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/62" data-pixel="0.1"/>
+<rect x="1113" y="1348" width="14" height="14" fill="rgb(230,230,230)" data-pixel-key="example/5/attacked_pixels/63" data-pixel="0.1"/>
+<text x="1015" y="1387" class="note">Prediction</text>
+<text x="1120" y="1387" class="cell" data-key="example/5/attacked_prediction">3</text>
+<text x="40" y="1455" class="section">4  Transfer is a different question from an adaptive attack</text>
+<text x="45" y="1490" class="note">1NN correct on MLP PGD images: epsilon0.1</text>
+<text x="635" y="1490" class="cell" data-key="transfer/0/correct">1678</text>
+<text x="825" y="1490" class="note">epsilon0.2</text>
+<text x="1005" y="1490" class="cell" data-key="transfer/1/correct">1379</text>
+<text x="45" y="1524" class="note">These are MLP-targeted images, not attacks optimized against 1NN. Do not rank robust models from this.</text>
+<text x="40" y="1578" class="note">Digits: Alpaydin &amp; Kaynak (1998), UCI, DOI 10.24432/C50P49, CC BY 4.0; attack images are adaptations.</text>
+<text x="40" y="1612" class="note">Small historical benchmark, fixed protocol and seed. Not MNIST, production OCR, SOTA or certified robustness.</text>
+<metadata id="full-report" data-encoding="zlib-base64">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</metadata></svg>
