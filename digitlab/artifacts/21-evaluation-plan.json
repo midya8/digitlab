@@ -1,0 +1,20 @@
+{
+  "epsilons": [
+    0.0,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "knn": "exact Euclidean 1NN on same fitting rows; earliest fitting index on distance ties",
+  "pgd_epsilons": [
+    0.1,
+    0.2
+  ],
+  "pgd_restarts": 3,
+  "pgd_retention": "prefer any misclassification, then larger true-label cross entropy; candidate pool includes clean, FGSM, starts and all iterates",
+  "pgd_seed": 811,
+  "pgd_steps": 20,
+  "random_sign_draws": 1,
+  "random_sign_seed": 903,
+  "selection": "models and all attack settings frozen before official test parsing"
+}

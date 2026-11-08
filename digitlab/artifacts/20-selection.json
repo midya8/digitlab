@@ -1,0 +1,61 @@
+{
+  "fit_rows": 3062,
+  "models": {
+    "linear": {
+      "checkpoints": [
+        {
+          "epoch": 10,
+          "validation_correct": 724,
+          "validation_nll": 0.2153686269274594
+        },
+        {
+          "epoch": 20,
+          "validation_correct": 734,
+          "validation_nll": 0.17576892378192674
+        },
+        {
+          "epoch": 40,
+          "validation_correct": 737,
+          "validation_nll": 0.14839461792821432
+        },
+        {
+          "epoch": 80,
+          "validation_correct": 735,
+          "validation_nll": 0.13175005757322045
+        }
+      ],
+      "model_sha256": "18cebbf56005af248a615b9bc8837d177eaaeb7d74b2b036ea392a078c491f2a",
+      "parameter_count": 650,
+      "selected_epoch": 80
+    },
+    "mlp": {
+      "checkpoints": [
+        {
+          "epoch": 10,
+          "validation_correct": 734,
+          "validation_nll": 0.1298630029446638
+        },
+        {
+          "epoch": 20,
+          "validation_correct": 741,
+          "validation_nll": 0.10745294382541153
+        },
+        {
+          "epoch": 40,
+          "validation_correct": 743,
+          "validation_nll": 0.09255967333159518
+        },
+        {
+          "epoch": 80,
+          "validation_correct": 741,
+          "validation_nll": 0.08427463822308548
+        }
+      ],
+      "model_sha256": "86683b99612471ae8b60cb883b0231a93981bcd0cf04e2345fef50829530a47d",
+      "parameter_count": 2410,
+      "selected_epoch": 80
+    }
+  },
+  "protocol_sha256": "cce9df411b68dc1e8a280c8c9a8868292386f976d372381b1788795ab7d1eb9e",
+  "validation_rows": 761
+}
