@@ -17,7 +17,7 @@ already wrong; 796 have positive attained thresholds and 902 have positive
 Errors exist strictly beyond it, not at it. All 7,188 old box decisions agree.
 No model, dataset, old report or training setting changed.
 
-![Exact radius infima and boundary-attainment examples](assets/radius-audit.svg)
+![Exact radius infima and boundary-attainment examples](https://raw.githubusercontent.com/midya8/digitlab/5c2fcdad50ec3c1fbefb69a94537607013c0601b/assets/radius-audit.svg)
 
 This remains a real affine proof using exact loaded binary64 coefficients,
 not a guarantee about floating evaluation on newly constructed boundary ties,
