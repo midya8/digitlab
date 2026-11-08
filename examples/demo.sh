@@ -29,3 +29,10 @@ python -m digitlab box-audit --artifacts "$TMP/box" > "$TMP/box-run.json"
 for f in digitlab/artifacts/box*.json; do cmp "$f" "$TMP/box/$(basename "$f")"; done
 python examples/render_box.py "$TMP/box-figure.svg"
 cmp "$TMP/box-figure.svg" assets/box-audit.svg
+
+python -m digitlab radius > "$TMP/radius-saved.json"
+cmp "$TMP/radius-saved.json" digitlab/artifacts/radius-report.json
+python -m digitlab radius-audit --artifacts "$TMP/radius" > "$TMP/radius-run.json"
+cmp "$TMP/radius-run.json" digitlab/artifacts/radius-report.json
+python examples/render_radius.py "$TMP/radius-figure.svg"
+cmp "$TMP/radius-figure.svg" assets/radius-audit.svg
