@@ -7,14 +7,15 @@
   data.samples.forEach((s,i) => { const option = document.createElement('option'); option.value=i; option.textContent=`Digit ${s.label} / official test row ${s.row}`; $('sample').append(option); });
   for(let k=0;k<10;k++) {
     const option=document.createElement('option');option.value=k;option.textContent=String(k);$('label').append(option);
+    const target=document.createElement('option');target.value=k;target.textContent=String(k);$('attribution-target').append(target);
     const row=document.createElement('div');row.className='score-row';const label=document.createElement('span');label.textContent=k;const meter=document.createElement('meter');meter.min=0;meter.max=1;meter.setAttribute('aria-label',`Class ${k} softmax score`);const value=document.createElement('output');row.append(label,meter,value);$('scores').append(row);scoreRows.push({meter,value});
   }
-  function update() {
+  function update(invalidateAttribution=true) {
     const r=DigitLab.infer(data.models[$('model').value],pixels);$('prediction').textContent=String(r.prediction);
     r.probabilities.forEach((v,k)=>{scoreRows[k].meter.value=v;scoreRows[k].value.textContent=v>.999?'>99.9%':v>0&&v<.001?'<0.1%':`${(100*v).toFixed(1)}%`;});
     pixels.forEach((v,i)=>{buttons[i].style.background=shade(v);buttons[i].setAttribute('aria-label',`Row ${Math.floor(i/8)+1}, column ${i%8+1}, count ${Math.round(v*16)} of 16`);buttons[i].tabIndex=i===focus?0:-1;});
     $('provenance').textContent=edited?'Edited input / recorded sample label cleared. Not a test-set accuracy measurement.':`Unmodified source counts / official test row ${original().row}, recorded label ${original().label}.`;
-    $('attack').disabled=$('label').value==='';$('attack-result').hidden=true;
+    $('attack').disabled=$('label').value==='';$('attack-result').hidden=true;if(invalidateAttribution!==false)$('attribution-result').hidden=true;
   }
   function paint(i){focus=i;pixels[i]=Number($('brush').value)/16;edited=true;$('label').value='';update();}
   for(let i=0;i<64;i++) {
@@ -32,7 +33,15 @@
   function restore(){pixels=original().counts.map(v=>v/16);edited=false;$('label').value=String(original().label);update();}
   $('sample').addEventListener('change',restore);$('restore').addEventListener('click',restore);
   $('clear').addEventListener('click',()=>{pixels=Array(64).fill(0);edited=true;$('label').value='';update();});
-  $('model').addEventListener('change',update);$('epsilon').addEventListener('change',update);$('label').addEventListener('change',update);
+  $('model').addEventListener('change',update);$('epsilon').addEventListener('change',()=>update(false));$('label').addEventListener('change',()=>update(false));
+  for(const id of ['attribution-target','attribution-baseline'])$(id).addEventListener('change',()=>$('attribution-result').hidden=true);
+  $('attribute').addEventListener('click',()=>{
+    const target=Number($('attribution-target').value),name=$('attribution-baseline').value,r=DigitLab.integratedGradients(data.models[$('model').value],pixels,data.baselines[name],target);
+    const scale=Math.max(...r.attributions.map(Math.abs));$('attribution-grid').replaceChildren();$('attribution-values').replaceChildren();
+    r.attributions.forEach((v,i)=>{const t=scale===0?0:Math.min(1,Math.abs(v)/scale),base=v>=0?[18,99,141]:[164,77,10],rgb=base.map(c=>Math.round(255+(c-255)*t)),cell=document.createElement('span'),label=`Row ${Math.floor(i/8)+1}, column ${i%8+1}: ${v.toPrecision(7)}`;cell.style.background=`rgb(${rgb.join(',')})`;cell.title=label;cell.setAttribute('aria-label',label);$('attribution-grid').append(cell);const item=document.createElement('li');item.textContent=label;$('attribution-values').append(item);});
+    $('attribution-summary').textContent=`Class ${target} logit: input ${r.inputLogit.toPrecision(9)} minus baseline ${r.baselineLogit.toPrecision(9)} = ${r.logitChange.toPrecision(9)}. Contribution sum ${r.attributionSum.toPrecision(9)}. Floating residual ${r.residual.toExponential(3)}.`;
+    $('attribution-scale').textContent=`Symmetric display scale: plus or minus ${scale.toPrecision(7)} logit units. Baseline: ${name==='zero'?'all-zero block counts':'frozen fitting-partition mean'}.`;$('attribution-result').hidden=false;
+  });
   $('attack').addEventListener('click',()=>{
     if($('label').value==='')return;
     const label=Number($('label').value),epsilon=Number($('epsilon').value),before=DigitLab.infer(data.models[$('model').value],pixels),a=DigitLab.fgsm(data.models[$('model').value],pixels,label,epsilon);
