@@ -1,12 +1,12 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawn}=require('node:child_process');
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-test('actual browser: labels, edit/reset, two models, FGSM, keyboard, mobile layout', {timeout:30000}, async()=>{
+test('actual browser: labels, edit/reset, two models, FGSM, keyboard, mobile layout', {timeout:60000}, async()=>{
  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'digitlab-browser-'));
- const browser=spawn(process.env.CHROME_BIN||'google-chrome',['--headless','--no-sandbox','--disable-gpu','--disable-extensions','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});let ws;
+ const browser=spawn(process.env.CHROME_BIN||'google-chrome',['--headless','--no-sandbox','--disable-gpu','--disable-extensions','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});let ws,startupError,diagnostics='';browser.on('error',e=>startupError=e);browser.stderr.on('data',d=>diagnostics=(diagnostics+d).slice(-4000));
  try{
-  for(let i=0;i<200&&!fs.existsSync(path.join(profile,'DevToolsActivePort'));i++)await delay(25);
-  assert.ok(fs.existsSync(path.join(profile,'DevToolsActivePort')),'Chrome debugger did not start');const port=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split('\n')[0];
+  for(let i=0;i<1200&&!startupError&&browser.exitCode===null&&!fs.existsSync(path.join(profile,'DevToolsActivePort'));i++)await delay(25);
+  assert.ok(fs.existsSync(path.join(profile,'DevToolsActivePort')),`Chrome debugger did not start: ${startupError?.message||diagnostics||browser.exitCode}`);const port=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split('\n')[0];
   const tabs=await(await fetch(`http://127.0.0.1:${port}/json/list`)).json();ws=new WebSocket(tabs.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise((res,rej)=>{ws.onopen=res;ws.onerror=rej;});
   let seq=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(pending.has(m.id)){const {res,rej}=pending.get(m.id);pending.delete(m.id);m.error?rej(new Error(JSON.stringify(m.error))):res(m.result);}};
   const call=(method,params={})=>new Promise((res,rej)=>{const id=++seq;pending.set(id,{res,rej});ws.send(JSON.stringify({id,method,params}));});
@@ -31,5 +31,5 @@ test('actual browser: labels, edit/reset, two models, FGSM, keyboard, mobile lay
   await js(`document.querySelector('#sample').value='6';document.querySelector('#sample').dispatchEvent(new Event('change'));document.querySelector('#model').value='mlp';document.querySelector('#model').dispatchEvent(new Event('change'));document.querySelector('#attack').click()`);
   assert.equal(await js(`document.querySelector('#label').value`),'6');assert.match(await js(`document.querySelector('#provenance').textContent`),/recorded label 6/);assert.equal(await js(`document.querySelectorAll('#attack-grid span').length`),64);
   if(process.env.DIGITLAB_SCREENSHOT){await call('Emulation.setDeviceMetricsOverride',{width:1280,height:1800,deviceScaleFactor:1,mobile:false});const s=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:true});fs.writeFileSync(process.env.DIGITLAB_SCREENSHOT,Buffer.from(s.data,'base64'));}
- }finally{if(ws)ws.close();browser.kill('SIGTERM');if(browser.exitCode===null)await new Promise(resolve=>browser.once('exit',resolve));await fs.promises.rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
+ }finally{if(ws)ws.close();if(browser.pid&&browser.exitCode===null){browser.kill('SIGTERM');await new Promise(resolve=>browser.once('exit',resolve));}await fs.promises.rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:200});}
 });
