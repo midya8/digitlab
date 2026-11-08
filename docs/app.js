@@ -27,6 +27,7 @@
       e.preventDefault();focus=next;buttons.forEach((b,j)=>b.tabIndex=j===focus?0:-1);buttons[next].focus();
     });buttons.push(button);$('grid').append(button);
   }
+  window.addEventListener('pointermove',e=>{if(!painting||e.pointerType!=='touch')return;const target=document.elementFromPoint(e.clientX,e.clientY);const i=buttons.indexOf(target);if(i>=0)paint(i);});
   window.addEventListener('pointerup',()=>painting=false);window.addEventListener('pointercancel',()=>painting=false);
   function restore(){pixels=original().counts.map(v=>v/16);edited=false;$('label').value=String(original().label);update();}
   $('sample').addEventListener('change',restore);$('restore').addEventListener('click',restore);
