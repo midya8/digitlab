@@ -30,7 +30,11 @@ The same exporter creates 52 NumPy reference cases: each of two models on the
 first 20 official rows, zero/one inputs and four seeded uniform inputs. Node
 checks all class probabilities, log probabilities, loss, every input-gradient
 coordinate and clipped FGSM pixels against NumPy with explicit numerical
-tolerances. These are finite cross-language checks, not an all-input proof.
+tolerances (absolute 2e-12, or 5e-12 for gradients). Regeneration keeps model/sample
+bytes and discrete inputs/labels/predictions exact but compares finite floating
+reference values with those tolerances, not a cross-machine bitwise promise.
+Roundoff-acceptance and material-corruption/NaN/infinity/discrete-change rejection
+controls test this boundary. These are finite checks, not an all-input proof.
 Zero-radius identity, class-order ties, invalid inputs and explicit attack-label
 requirements are tested separately. The original 59 Python tests remain intact.
 
