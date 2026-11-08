@@ -8,6 +8,29 @@ is retained even when it wins.
 
 ![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
+## v0.3: the infimum can be unattained
+
+The new [radius audit](RADIUS.md) solves every official row's exact minimum-error
+radius infimum by walking clipped-margin breakpoints. Of 1,797 rows, 99 are
+already wrong; 796 have positive attained thresholds and 902 have positive
+**unattained** infima. At an unattained boundary, the true label wins a tie.
+Errors exist strictly beyond it, not at it. All 7,188 old box decisions agree.
+No model, dataset, old report or training setting changed.
+
+![Exact radius infima and boundary-attainment examples](assets/radius-audit.svg)
+
+This remains a real affine proof using exact loaded binary64 coefficients,
+not a guarantee about floating evaluation on newly constructed boundary ties,
+and not an MLP certificate. 59 tests retain the previous 45, adding independent
+vertex/knot references for 144 small cases, 100 official boundary checks,
+full-radius reproduction and a third complete-report figure. Nine modules,
+eight CLI modes:
+
+```bash
+python -m digitlab radius
+OPENBLAS_NUM_THREADS=1 python -m digitlab radius-audit --artifacts runs/radius
+```
+
 ## v0.2: an exact question for the fixed linear model
 
 The new [box audit](BOX.md) solves every true-label competitor margin on the
