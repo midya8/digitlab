@@ -8,6 +8,37 @@ is retained even when it wins.
 
 ![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
+## v0.4: inspect the models in a browser
+
+The new offline [interactive demo](docs/index.html) uses the unchanged selected
+linear/MLP weights and original, attributed examples. Edit an 8x8 block-count
+grid, inspect all ten softmax scores, and try clipped FGSM with an explicit loss
+label. Editing clears a recorded label; ordinary prediction never depends on
+the attack label. The original grid stays unchanged beside the attack result.
+No account, upload, analytics, model API, framework or prediction server.
+
+This is floating JavaScript inference, **not an exact certificate**, calibrated
+confidence, production OCR or an accuracy promise on your drawing. The stronger
+1NN clean result remains visible and is not claimed to run in the browser.
+The exact rational proofs remain separate. Original examples are first per
+class, explicitly not a representative sample.
+
+62 Python tests and four Node/browser tests include 52 independent NumPy
+inference/loss/input-gradient/FGSM reference cases, byte-exact model/sample
+exports, actual keyboard/edit/reset/label/bounds flows, and no horizontal page
+overflow at 320px, 390px and 1280px. The previous 59 Python tests are preserved.
+Open `docs/index.html` locally after cloning, with no runtime install required.
+Developer checks:
+
+```bash
+OPENBLAS_NUM_THREADS=1 python examples/build_web_data.py
+node --test tests/test_web.cjs tests/test_browser.cjs
+```
+
+The actual-browser test needs Node 22 and Chrome; numerical JavaScript tests
+need only Node. Six CI jobs check Python 3.10-3.13, the installed wheel and the
+browser demo. [Demo provenance and data terms](docs/NOTICE.md).
+
 ## v0.3: the infimum can be unattained
 
 The new [radius audit](RADIUS.md) solves every official row's exact minimum-error
