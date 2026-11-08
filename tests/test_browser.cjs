@@ -15,6 +15,12 @@ test('actual browser: labels, edit/reset, two models, FGSM, keyboard, mobile lay
   for(let i=0;i<200;i++){if(await js(`document.querySelectorAll('#grid button').length===64 && document.querySelector('#prediction').textContent!==''`))break;await delay(20);}
   assert.equal(await js(`document.querySelectorAll('#grid button').length`),64);assert.equal(await js(`document.querySelector('#label').value`),'0');assert.equal(await js(`document.querySelector('#attack').disabled`),false);
   for(const width of [320,390,1280]){await call('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<700});assert.ok(await js('document.documentElement.scrollWidth <= window.innerWidth'),`overflow at ${width}`);}
+  await call('Emulation.setDeviceMetricsOverride',{width:390,height:1000,deviceScaleFactor:1,mobile:true});await call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  await js(`document.querySelector('#clear').click();document.querySelector('#grid').scrollIntoView({block:'center'})`);
+  const points=await js(`Array.from(document.querySelectorAll('#grid button')).slice(0,2).map(b=>{const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})`);
+  await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[points[0]]});await call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[points[1]]});await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  assert.equal(await js(`document.querySelectorAll('#grid button')[0].getAttribute('aria-label')`),'Row 1, column 1, count 16 of 16');assert.equal(await js(`document.querySelectorAll('#grid button')[1].getAttribute('aria-label')`),'Row 1, column 2, count 16 of 16');
+  assert.equal(await js(`document.querySelector('#label').value`),'');await call('Emulation.setTouchEmulationEnabled',{enabled:false});await js(`document.querySelector('#restore').click()`);
   await js(`document.querySelector('#model').value='linear';document.querySelector('#model').dispatchEvent(new Event('change'));document.querySelector('#attack').click()`);
   assert.equal(await js(`document.querySelector('#attack-result').hidden`),false);assert.match(await js(`document.querySelector('#attack-bounds').textContent`),/0\.100000/);
   await js(`document.querySelector('#clear').click()`);assert.equal(await js(`document.querySelector('#label').value`),'');assert.equal(await js(`document.querySelector('#attack').disabled`),true);assert.equal(await js(`document.querySelector('#attack-result').hidden`),true);
