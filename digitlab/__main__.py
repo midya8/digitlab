@@ -1,13 +1,17 @@
 import argparse,json,sys
 from pathlib import Path
 import numpy as np
-from . import train,evaluate,model
+from . import train,evaluate,model,box
 ART=Path(__file__).resolve().parent/'artifacts'
 
 def main(argv=None):
-    p=argparse.ArgumentParser(description='Real UCI digit training and bounded-input attack audit');p.add_argument('mode',choices=('demo','train','evaluate','predict'));p.add_argument('--artifacts');p.add_argument('--model');p.add_argument('--input');a=p.parse_args(argv)
+    p=argparse.ArgumentParser(description='Real UCI digit training and bounded-input attack audit');p.add_argument('mode',choices=('demo','train','evaluate','predict','box','box-audit'));p.add_argument('--artifacts');p.add_argument('--model');p.add_argument('--input');a=p.parse_args(argv)
     try:
-        if a.mode=='demo':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('report.json').read_text())
+        if a.mode=='box':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('box-report.json').read_text())
+        elif a.mode=='box-audit':
+            if not a.artifacts:raise ValueError('box-audit requires --artifacts output directory')
+            r=box.run(a.artifacts)
+        elif a.mode=='demo':r=json.loads((Path(a.artifacts)if a.artifacts else ART).joinpath('report.json').read_text())
         elif a.mode in ('train','evaluate'):
             if not a.artifacts:raise ValueError('train/evaluate require --artifacts output directory')
             r=train.run(a.artifacts)if a.mode=='train'else evaluate.evaluate(a.artifacts)
