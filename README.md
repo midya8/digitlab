@@ -8,6 +8,45 @@ is retained even when it wins.
 
 ![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
+## v0.5: a score difference is not a causal explanation
+
+The [live inspector](https://midya8.github.io/digitlab/) now shows signed
+**class-logit Integrated Gradients**, with an explicit class and either all-zero
+block counts or the frozen fitting-partition mean. The baseline logit, input
+logit, their change, the contribution sum and floating residual are visible.
+All 64 signed values can be inspected. The attack label is independent.
+Changing the reference changes the question; neither baseline is assumed
+neutral or realistic. These are not causal feature importance, class
+probabilities, deletion effects or proof the model is trustworthy.
+
+![Finite attribution checks and baseline-relative signed digit maps](assets/attribution-audit.svg)
+
+The established method is evaluated algebraically for the existing linear and
+one-hidden-layer tanh models, with a stable divided difference for small hidden
+preactivation changes. No new attribution method is claimed. A separate
+128-node Gauss-Legendre path integral checks individual coordinates, not just
+completeness. All 7,188 official model/baseline/row combinations contain finite
+values; the saved maximum sum residual is 1.07e-14 and maximum coordinate
+quadrature difference is 3.56e-15 on 40 fixed demonstration vectors. These are
+finite floating checks, **not exact certificates** or explanation-quality scores.
+
+78 Python tests preserve all previous 64. Six Node/real-Chrome tests retain the
+52 inference/gradient/FGSM references and add 106 attribution-vector references,
+explicit baselines/targets, invariance, zero displacement, saturation, independent
+finite differences/quadrature, fitting-only provenance, complete report/figure
+checks and real mobile/keyboard/touch flows. The original models, datasets,
+finite-attack reports and exact affine proofs are unchanged. Ten modules and
+ten CLI modes include:
+
+```bash
+python -m digitlab attribution
+python -m digitlab attribution-audit --artifacts /tmp/digit-attribution
+```
+
+[Derivation, controls, sources and limits](ATTRIBUTION.md). Established IG:
+Sundararajan, Taly & Yan (ICML 2017). No TensorFlow, PyTorch, Captum or autograd
+engine is used. The stronger 1NN baseline is not given a fake gradient map.
+
 ## v0.4: inspect the models in a browser
 
 The [live model inspector](https://midya8.github.io/digitlab/) also works
