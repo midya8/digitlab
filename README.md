@@ -8,7 +8,20 @@ is retained even when it wins.
 
 ![Real data, stronger baseline, bounded attacks and actual digit adaptations](https://raw.githubusercontent.com/midya8/digitlab/a5f2da5e9e6732ace852f7af39bb73bf6afbd66c/assets/digit-audit.svg)
 
-## v0.5: a score difference is not a causal explanation
+## Choose an audit
+
+| Question | Command or page | Limits |
+| --- | --- | --- |
+| How do the trained models and stronger baseline compare? | `demo`, `train`, `evaluate` | One fixed data split and protocol |
+| What survives a finite input attack? | `evaluate`, browser inspector | Surviving a search is not a robustness proof |
+| Is the linear model correct throughout a clipped box? | `box`, `box-audit` | Real affine function of the stored coefficients, not the MLP |
+| Where does linear-model error first become possible? | `radius`, `radius-audit` | An infimum need not be attained |
+| How does a reference-relative logit difference decompose? | `attribution`, `attribution-audit`, browser inspector | Not causal importance or explanation quality |
+
+The release notes below retain their original test counts. The current suite
+has 78 Python and six Node/browser tests.
+
+## Class-logit attribution (v0.5)
 
 The [live inspector](https://midya8.github.io/digitlab/) now shows signed
 **class-logit Integrated Gradients**, with an explicit class and either all-zero
@@ -47,7 +60,7 @@ python -m digitlab attribution-audit --artifacts /tmp/digit-attribution
 Sundararajan, Taly & Yan (ICML 2017). No TensorFlow, PyTorch, Captum or autograd
 engine is used. The stronger 1NN baseline is not given a fake gradient map.
 
-## v0.4: inspect the models in a browser
+## Browser inference and attacks (v0.4)
 
 The [live model inspector](https://midya8.github.io/digitlab/) also works
 [offline](docs/index.html). It uses the unchanged selected
@@ -79,9 +92,9 @@ The actual-browser test needs Node 22 and Chrome; numerical JavaScript tests
 need only Node. Six CI jobs check Python 3.10-3.13, the installed wheel and the
 browser demo. [Browser protocol and privacy](WEB.md). [Data terms](docs/NOTICE.md).
 
-## v0.3: the infimum can be unattained
+## Exact radius infima (v0.3)
 
-The new [radius audit](RADIUS.md) solves every official row's exact minimum-error
+The [radius audit](RADIUS.md) solves every official row's exact minimum-error
 radius infimum by walking clipped-margin breakpoints. Of 1,797 rows, 99 are
 already wrong; 796 have positive attained thresholds and 902 have positive
 **unattained** infima. At an unattained boundary, the true label wins a tie.
@@ -102,9 +115,9 @@ python -m digitlab radius
 OPENBLAS_NUM_THREADS=1 python -m digitlab radius-audit --artifacts runs/radius
 ```
 
-## v0.2: an exact question for the fixed linear model
+## Exact linear-model boxes (v0.2)
 
-The new [box audit](BOX.md) solves every true-label competitor margin on the
+The [box audit](BOX.md) solves every true-label competitor margin on the
 clipped continuous box with exact integers/rationals. At radii 0, 1/20, 1/10
 and 1/5, the linear model is correct everywhere for **1,698 / 1,495 / 1,028 / 23**
 of the 1,797 test examples. The saved PGD pool retained 1,042 and 33 at the
@@ -237,7 +250,7 @@ without any test-loader call, and reproduction from saved selected models.
 The figure binds **62 displayed value cells and 768 pixel values** and embeds
 the complete report; a hidden prediction change changes its metadata.
 
-Five CI jobs check Python 3.10-3.13 plus installed-wheel imports, bundled-data
+The original five-job CI checked Python 3.10-3.13 plus installed-wheel imports, bundled-data
 access and JSON inference outside checkout. Saved report/figure reproduction is
 exact; retrained floating weights use explicit tolerances across NumPy/BLAS
 implementations. All test predictions and counts must agree. No cross-platform
